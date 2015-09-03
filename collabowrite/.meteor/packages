@@ -10,3 +10,4 @@ insecure
 accounts-password
 accounts-ui
 iron:router
+themeteorchef:jquery-validation
