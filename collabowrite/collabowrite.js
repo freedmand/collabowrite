@@ -119,9 +119,9 @@ if (Meteor.isClient) {
         Accounts.createUser({
           email: email,
           password: password
-        }, function(error){
-          if(error){
-            if(error.reason == "Email already exists.") {
+        }, function(error) {
+          if (error) {
+            if (error.reason == "Email already exists.") {
               validator.showErrors({
                 email: "That email already belongs to a registered user."   
               });
@@ -130,7 +130,6 @@ if (Meteor.isClient) {
             Router.go("home");
           }
         });
-        Router.go('login');
       }
     });
   });
