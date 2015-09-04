@@ -10,9 +10,10 @@
     {{#if currentUser}}
       <li><a href="#" class="logout">Logout</a></li>
     {{else}}
-      <li><a href="{{pathFor route='register'}}">Register</a></li>
+      <li><a id="register_link" href="{{pathFor route='register'}}">Register</a></li>
       <li><a href="{{pathFor route='login'}}">Login</a></li>
     {{/if}}
+    <li><a href="{{pathFor route='listing'}}">Submissions</a></li>
   </ul>
 </template>
 
@@ -59,6 +60,35 @@
     <p>Password: <input type="password" name="password"></p>
     <p><input type="submit" value="Register"></p>
   </form>
+</template>
+
+<template name="listing">
+  <h2>Submissions</h2>
+  {{#each submissions}}
+    {{> book_excerpt}}
+  {{/each}}
+  <p><a href="{{pathFor route='compose'}}">Compose</a></p>
+</template>
+
+<template name="compose">
+  <form class="compose">
+    <p>Title: <input type="text" name="title"></p>
+    <p>Body: <textarea name="body"></textarea></p>
+    <p><input type="submit" value="Submit"></p>
+  </form>
+</template>
+
+<template name="book_excerpt">
+  <div><a href="{{pathFor route='listing'}}/{{_id}}">{{title}}</a></div>
+  <div>{{excerpt}}</div>
+  <hr />
+</template>
+
+<template name="book_view">
+  <br />
+  <a href="{{pathFor route='listing'}}">Back to Submissions</a>
+  <h3>{{title}}</h3>
+  <div>{{body}}</div>
 </template>
 
 <template name="restricted">

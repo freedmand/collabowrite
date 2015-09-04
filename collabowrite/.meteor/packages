@@ -12,3 +12,4 @@ accounts-ui
 iron:router
 themeteorchef:jquery-validation
 email
+digilord:faker
