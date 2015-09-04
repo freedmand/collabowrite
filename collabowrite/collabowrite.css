@@ -1,3 +1,16 @@
 .error {
   background: #FF7373;
 }
+
+.book {
+  font-family: Garamond, sans-serif;
+  line-height: 1.43;
+  font-size: 12.5pt;
+  width: 26.1em;
+  text-indent: 0.95em;
+  -webkit-hyphens: auto;
+  text-align: justify;
+  margin-left: auto;
+  margin-right: auto;
+  word-spacing: 0.05em;
+}
