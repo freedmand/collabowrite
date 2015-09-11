@@ -11,7 +11,7 @@
       <li><a href="#" class="logout">Logout</a></li>
     {{else}}
       <li><a id="register_link" href="{{pathFor route='register'}}">Register</a></li>
-      <li><a href="{{pathFor route='login'}}">Login</a></li>
+      <li><a id="login_link" href="{{pathFor route='login'}}">Login</a></li>
     {{/if}}
     <li><a href="{{pathFor route='listing'}}">Submissions</a></li>
   </ul>
@@ -44,6 +44,32 @@
   </div>
 </template>
 
+<template name="profile">
+  <div>Here you can manage your profile and view your submissions.</div>
+  <p>Email: </p><p>{{email}}</p>
+  <p><a href="#">Forgot password?</a></p>
+  <p><a href="#">Change Password</a></p>
+  <p><a href="#">Submissions</a></p>
+</template>
+
+<template name="user_submissions">
+  <h2>Your Submissions</h2>
+  {{#each submissions}}
+    {{> book_excerpt}}
+    <a href="#">Edit</a>
+  {{/each}}
+  <p><a href="{{pathFor route='compose'}}">Compose</a></p>
+</template>
+
+<template name="password_change">
+  <form class="password_change">
+    <p>Old password: <input type="password" name="old"></p>
+    <p>New password: <input type="password" name="new"></p>
+    <p>Confirm password: <input type="password" name="confirm"></p>
+    <p><input type="submit" value="Change password"></p>
+  </form>
+</template>
+
 <template name="login">
   <h2>Login</h2>
   <form class="login">
@@ -58,6 +84,10 @@
   <form class="register">
     <p>Email: <input type="email" name="email"></p>
     <p>Password: <input type="password" name="password"></p>
+    <p>Moniker: <input type="text" name="moniker"></p>
+    {{#each monikers}}
+      <button class="moniker">{{this}}</button>
+    {{/each}}
     <p><input type="submit" value="Register"></p>
   </form>
 </template>
@@ -74,12 +104,13 @@
   <form class="compose">
     <p>Title: <input type="text" name="title"></p>
     <p>Body: <textarea name="body"></textarea></p>
+    <p>(optional) Author name: <input type="text" placeholder="Anonymous" name="author"><input type="button" value="Generate Pseudonym" name="pseudonym"></p>
     <p><input type="submit" value="Submit"></p>
   </form>
 </template>
 
 <template name="book_excerpt">
-  <div><a href="{{pathFor route='listing'}}/{{_id}}">{{title}}</a></div>
+  <div><a href="{{pathFor route='listing'}}/{{_id}}">{{title}}</a> by <span class="author">{{author}}</span></div>{{> upvote}}{{> downvote}}
   <div>{{excerpt}}</div>
   <hr />
 </template>
@@ -88,6 +119,7 @@
   <br />
   <a href="{{pathFor route='listing'}}">Back to Submissions</a>
   <h3>{{title}}</h3>
+  <h4>By <span class="author">{{author}}</span></h4>
   <div>{{body}}</div>
 </template>
 
@@ -104,4 +136,28 @@
   <div class="book">
     There was a loud bang behind Harry as Neville Longbottom&rsquo;s wand slipped, vanishing one of the legs on his desk.
   </div>
+</template>
+
+<template name="upvote">
+  {{> upvote_fresh}}
+</template>
+
+<template name="downvote">
+  {{> downvote_fresh}}
+</template>
+
+<template name="upvote_fresh">
+  <button>Upvote</button>
+</template>
+
+<template name="upvoted">
+  <button disabled>Upvoted already</button>
+</template>
+
+<template name="downvote_fresh">
+  <button>Downvote</button>
+</template>
+
+<template name="downvoted">
+  <button disabled>Downvoted already</button>
 </template>

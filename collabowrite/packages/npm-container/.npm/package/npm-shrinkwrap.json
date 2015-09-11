@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "alias-sampling": {
+      "version": "0.5.2"
+    },
+    "unidecode": {
+      "version": "0.1.7"
+    }
+  }
+}
