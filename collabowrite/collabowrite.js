@@ -227,7 +227,7 @@ if (Meteor.isClient) {
       $('[name=email]').val(tmpEmail);
       Session.set('tempRegEmail', undefined);
     }
-    var validator = $('.register').validate({
+    this.validator = new ReactiveVar($('.register').validate({
       rules: {
         moniker: {
           required: true,
@@ -264,7 +264,7 @@ if (Meteor.isClient) {
           }
         });
       }
-    });
+    }));
   });
 
   Template.register.events({
@@ -275,8 +275,17 @@ if (Meteor.isClient) {
       $('[name=moniker]').val($(e.target).html());
       event.preventDefault();
     },
-    'input [name=moniker]': function(e) {
-      console.log($(e.target).val());
+    'keyup [name=moniker]': function(e, template) {
+      var val = $(e.target).val();
+      if (val.length >= 3) {
+        Meteor.call('monikeravailable', val, function(error, result) {
+          if (!result) {
+            template.validator.get().showErrors({
+              'moniker': 'Sorry, the selected moniker is not available.'
+            })
+          }
+        });
+      }
     }
   });
   
@@ -380,6 +389,12 @@ if (Meteor.isServer) {
     },
     'normedname': function(name) {
       return normalizeMoniker(name);
+    },
+    'monikeravailable': function(moniker) {
+      return Meteor.users.find({"profile.moniker_norm": {$eq: normalizeMoniker(moniker)}}).count() == 0;
+    },
+    'monikervalid': function(moniker) {
+      return normalizeMoniker(moniker).length >= 3;
     }
   })
 }
