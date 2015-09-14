@@ -104,13 +104,16 @@
   <form class="compose">
     <p>Title: <input type="text" name="title"></p>
     <p>Body: <textarea name="body"></textarea></p>
-    <p>(optional) Author name: <input type="text" placeholder="Anonymous" name="author"><input type="button" value="Generate Pseudonym" name="pseudonym"></p>
+    <p>Publish as:
+      <input type="radio" name="author" value="real">{{name}}
+      <input type="radio" name="author" value="anonymous">Anonymous
+    </p>
     <p><input type="submit" value="Submit"></p>
   </form>
 </template>
 
 <template name="book_excerpt">
-  <div><a href="{{pathFor route='listing'}}/{{_id}}">{{title}}</a> by <span class="author">{{author}}</span></div>{{> upvote}}{{> downvote}}
+  <div><a href="{{pathFor route='listing'}}/{{_id}}">{{title}}</a> by <span class="author">{{author}}</span></div>{{> votes}}
   <div>{{excerpt}}</div>
   <hr />
 </template>
@@ -120,6 +123,7 @@
   <a href="{{pathFor route='listing'}}">Back to Submissions</a>
   <h3>{{title}}</h3>
   <h4>By <span class="author">{{author}}</span></h4>
+  {{> votes}}
   <div>{{body}}</div>
 </template>
 
@@ -138,12 +142,27 @@
   </div>
 </template>
 
-<template name="upvote">
-  {{> upvote_fresh}}
+<template name="votes">
+  {{> vote_meter}}
+  {{#if voted "upvote"}}
+    {{> upvoted}}
+    {{> downvote_fresh}}
+  {{else}}
+    {{#if voted "downvote"}}
+      {{> upvote_fresh}}
+      {{> downvoted}}
+    {{else}}
+      {{> upvote_fresh}}
+      {{> downvote_fresh}}
+    {{/if}}
+  {{/if}}
 </template>
 
-<template name="downvote">
-  {{> downvote_fresh}}
+<template name="vote_meter">
+  <span class="meter">
+    <span class="upvotes" style="width: {{upvote_perc}}%"></span>
+    <span class="downvotes" style="width: {{downvote_perc}}%"></span>
+  </span>
 </template>
 
 <template name="upvote_fresh">

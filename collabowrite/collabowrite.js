@@ -4,6 +4,7 @@ USER_ALREADY_REGISTERED = "That email already belongs to a registered user.";
 INCORRECT_PASSWORD = "You entered an incorrect password.";
 
 Submissions = new Mongo.Collection("submissions");
+Votes = new Mongo.Collection("votes");
 
 Router.configure({
     layoutTemplate: 'main'
@@ -139,17 +140,23 @@ if (Meteor.isClient) {
         var title = $('[name=title]').val();
         var body = $('[name=body]').val();
         var author = $('[name=author]').val();
-        if (author.trim().length == 0) {
-          author = "Anonymous";
+        if (author == "real") {
+          author = Meteor.user().profile.moniker;
         }
         
-        Submissions.insert({'title':title, 'body': body, 'author': author, 'userId': Meteor.userId}, function(error) {
+        Submissions.insert({'title':title, 'body': body, 'author': author, 'userId': Meteor.userId, "upvotes": 0, "downvotes": 0}, function(error) {
           if (!error) {
             Router.go("listing");
           }
         });
       }
     });
+  });
+  
+  Template.compose.helpers({
+    'name': function() {
+      return Meteor.user().profile.moniker;
+    }
   });
   
   Template.compose.events({
@@ -303,7 +310,78 @@ if (Meteor.isClient) {
     'monikers': function() {
       return Session.get('monikers');
     }
-  })
+  });
+  
+  function updateMeter(bookID) {
+    var book = Submissions.find(bookID).fetch()[0];
+    var total = book.upvotes + book.downvotes;
+    Session.set('upvote_perc-' + bookID, book.upvotes / total * 100.0);
+    Session.set('downvote_perc-' + bookID, book.downvotes / total * 100.0);
+  }
+  
+  Template.vote_meter.onCreated(function() {
+    var bookID = Template.currentData()._id;
+    updateMeter(bookID);
+  });
+  
+  Template.vote_meter.helpers({
+    'upvote_perc': function() {
+      var bookID = Template.currentData()._id;
+      return Session.get('upvote_perc-' + bookID);
+    },
+    'downvote_perc': function() {
+      var bookID = Template.currentData()._id;
+      return Session.get('downvote_perc-' + bookID);
+    }
+  });
+  
+  Template.votes.onCreated(function() {
+    var bookID = Template.currentData()._id;
+    var userID = Meteor.userId();
+    var composite = 'vote-' + userID + '-' + bookID;
+    Meteor.call('getvote', userID, bookID, function(error, result) {
+      Session.set(composite, result);
+    });
+  });
+  
+  Template.votes.helpers({
+    'voted': function(result) {
+      var bookID = Template.currentData()._id;
+      var userID = Meteor.userId();
+      var composite = 'vote-' + userID + '-' + bookID;
+      console.log(Session.get(composite));
+      return Session.get(composite) == result;
+    }
+  });
+  
+  Template.upvote_fresh.events({
+    'click button': function(e) {
+      var bookID = Template.currentData()._id;
+      var userID = Meteor.userId();
+      var composite = 'vote-' + userID + '-' + bookID;
+      Meteor.call('votesubmission', userID, bookID, true, function(error, result) {
+        console.log(result);
+        if (result) {
+          Session.set(composite, "upvote");
+          updateMeter(bookID);
+        }
+      });
+    }
+  });
+  
+  Template.downvote_fresh.events({
+    'click button': function(e) {
+      var bookID = Template.currentData()._id;
+      var userID = Meteor.userId();
+      var composite = 'vote-' + userID + '-' + bookID;
+      Meteor.call('votesubmission', userID, bookID, false, function(error, result) {
+        if (result) {
+          Session.set(composite, "downvote");
+          updateMeter(bookID);
+        }
+      });
+    }
+  });
 }
 
 if (Meteor.isServer) {
@@ -374,6 +452,38 @@ if (Meteor.isServer) {
     }
     return user;
   });
+  
+  function getVote(userID, bookID) {
+    var votes = Votes.find({'user': userID, 'book': bookID}).fetch();
+    if (votes.length == 0) {
+      return "none"; 
+    } else {
+      return votes[0].up ? "upvote" : "downvote";
+    }
+  }
+  
+  function voteBook(bookID, upvotes, downvotes) {
+    Submissions.update(bookID, {$inc: {upvotes: upvotes, downvotes: downvotes}});
+  }
+  
+  function voteSubmission(userID, bookID, up) {
+    var votes = Votes.find({'user': userID, 'book': bookID}).fetch();
+    if (votes.length == 0) {
+      Votes.insert({'user': userID, 'book': bookID, 'up': up});
+      voteBook(bookID, up ? 1 : 0, up ? 0 : 1);
+    } else {
+      vote = votes[0];
+      var voteID = vote._id;
+      var voteUp = vote.up;
+      if (voteUp != up) {
+        Votes.update({'user': userID, 'book': bookID}, {$set: {'up': up}});
+        voteBook(bookID, up ? 1 : -1, up ? -1 : 1);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
 
   Meteor.methods({
     'fakename': function() {
@@ -408,6 +518,12 @@ if (Meteor.isServer) {
     },
     'monikervalid': function(moniker) {
       return normalizeMoniker(moniker).length >= 3;
+    },
+    'votesubmission': function(userID, bookID, up) {
+      return voteSubmission(userID, bookID, up);
+    },
+    'getvote': function(userID, bookID) {
+      return getVote(userID, bookID);
     }
   })
 }
