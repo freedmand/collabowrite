@@ -227,7 +227,7 @@ if (Meteor.isClient) {
       $('[name=email]').val(tmpEmail);
       Session.set('tempRegEmail', undefined);
     }
-    this.validator = new ReactiveVar($('.register').validate({
+    var validator = this.validator = new ReactiveVar($('.register').validate({
       rules: {
         moniker: {
           required: true,
@@ -255,9 +255,13 @@ if (Meteor.isClient) {
           if (error) {
             if (error.reason == "Email already exists.") {
               Session.set("tempLoginEmail", email);
-              validator.showErrors({
+              validator.get().showErrors({
                 email: USER_ALREADY_REGISTERED + ' (' + document.querySelector('#login_link').outerHTML + ')'
               });
+            } else {
+              var errorDetail = {};
+              errorDetail[error.details] = error.reason;
+              validator.get().showErrors(errorDetail);
             }
           } else {
             Router.go("listing");
@@ -318,18 +322,18 @@ if (Meteor.isServer) {
 
   function fakename() {
     var gender = faker.random.number(1);
-    var choice = _.random(0,10);
-    if (choice < 6) {
+    var choice = _.random(0,20);
+    if (choice < 16) {
       return faker.name.firstName(gender) + ' ' + faker.name.lastName(gender);
     } else {
       var initial_generator = gender ? male_initial_generator : female_initial_generator;
-      if (choice < 8) {
+      if (choice < 18) {
         return initial_generator.next() + '. ' + initial_generator.next() + '. ' + faker.name.lastName(gender);
-      } else if (choice < 9) {
+      } else if (choice < 19) {
         return faker.name.firstName(gender) + ' ' + initial_generator.next() + '. ' + faker.name.lastName(gender);
-      } else if (choice < 10) {
+      } else if (choice < 20) {
         return initial_generator.next() + '. ' + faker.name.firstName(gender) + ' ' + faker.name.lastName(gender);
-      } else if (choice < 11) {
+      } else if (choice < 21) {
         return initial_generator.next() + '. ' + faker.name.lastName(gender);
       }
     }
@@ -350,8 +354,22 @@ if (Meteor.isServer) {
   Accounts.onCreateUser(function(options, user) {
     if (options.profile) {
       user.profile = options.profile;
+      if (!options.password) {
+        throw new Meteor.Error(403, "Password is required!", "password");
+      }
+      if (options.password.length < 6) {
+        throw new Meteor.Error(403, "Password must contain at least 6 characters.", "password");
+      }
       if (options.profile.moniker) {
         user.profile.moniker_norm = normalizeMoniker(options.profile.moniker);
+        if (user.profile.moniker_norm.length < 3) {
+          throw new Meteor.Error(403, "Monikers must contain at least 3 letters and/or numbers.", "moniker");
+        }
+        if (monikerExists(user.profile.moniker_norm)) {
+          throw new Meteor.Error(403, "The selected moniker already exists", "moniker");
+        }
+      } else {
+        throw new Meteor.Error(403, "Monikers must contain at least 3 characters.", "moniker");
       }
     }
     return user;
@@ -372,17 +390,12 @@ if (Meteor.isServer) {
       
       while (result.length < REGISTRATION_MONIKERS_N) {
         var names = _(REGISTRATION_MONIKERS_N - result.length).times(function() {return fakename();});
-        console.log(names);
         var normedNames = _.map(names, normalizeMoniker);
-        console.log(normedNames);
         var subTable = _.object(normedNames, names);
-        console.log(subTable);
         normTable = _.extend(normTable, subTable);
         
         var monikers = removeExisting(normedNames);
-        console.log(monikers);
         result = _.union(result, monikers);
-        console.log(result);
       }
       
       return _.map(result, function(d) {return normTable[d];});

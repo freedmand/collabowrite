@@ -2,6 +2,21 @@
   background: #FF7373;
 }
 
+label.error {
+  color: #800027;
+  background-color: rgba(128, 0, 33, 0.27) !important;
+}
+
+label.error:before {
+  content: '\a ';
+  white-space: pre;
+}
+
+label.error:after {
+  content: ' ';
+  white-space: pre;
+}
+
 .book {
   font-family: Garamond, sans-serif;
   line-height: 1.43;
