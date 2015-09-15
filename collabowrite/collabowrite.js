@@ -142,6 +142,8 @@ if (Meteor.isClient) {
         var author = $('[name=author]').val();
         if (author == "real") {
           author = Meteor.user().profile.moniker;
+        } else {
+          author = "Anonymous";
         }
         
         Submissions.insert({'title':title, 'body': body, 'author': author, 'userId': Meteor.userId, "upvotes": 0, "downvotes": 0}, function(error) {
@@ -338,6 +340,9 @@ if (Meteor.isClient) {
   Template.votes.onCreated(function() {
     var bookID = Template.currentData()._id;
     var userID = Meteor.userId();
+    if (userID == null) {
+      return;
+    }
     var composite = 'vote-' + userID + '-' + bookID;
     Meteor.call('getvote', userID, bookID, function(error, result) {
       Session.set(composite, result);
@@ -348,38 +353,56 @@ if (Meteor.isClient) {
     'voted': function(result) {
       var bookID = Template.currentData()._id;
       var userID = Meteor.userId();
+      if (userID == null) {
+        return result == 'login';
+      }
       var composite = 'vote-' + userID + '-' + bookID;
-      console.log(Session.get(composite));
       return Session.get(composite) == result;
     }
   });
   
+  function vote(bookID, userID, direction) {
+    if (userID == null) {
+      return;
+    }
+    var composite = 'vote-' + userID + '-' + bookID;
+    Meteor.call('votesubmission', userID, bookID, direction, function(error, result) {
+      if (result) {
+        Session.set(composite, direction);
+        updateMeter(bookID);
+      }
+    });
+  }
+  
   Template.upvote_fresh.events({
-    'click button': function(e) {
+    'click button': function() {
       var bookID = Template.currentData()._id;
       var userID = Meteor.userId();
-      var composite = 'vote-' + userID + '-' + bookID;
-      Meteor.call('votesubmission', userID, bookID, true, function(error, result) {
-        console.log(result);
-        if (result) {
-          Session.set(composite, "upvote");
-          updateMeter(bookID);
-        }
-      });
+      vote(bookID, userID, "upvote");
+    }
+  });
+  
+  Template.upvoted.events({
+    'click button': function() {
+      var bookID = Template.currentData()._id;
+      var userID = Meteor.userId();
+      vote(bookID, userID, "none");
     }
   });
   
   Template.downvote_fresh.events({
-    'click button': function(e) {
+    'click button': function() {
       var bookID = Template.currentData()._id;
       var userID = Meteor.userId();
-      var composite = 'vote-' + userID + '-' + bookID;
-      Meteor.call('votesubmission', userID, bookID, false, function(error, result) {
-        if (result) {
-          Session.set(composite, "downvote");
-          updateMeter(bookID);
-        }
-      });
+      vote(bookID, userID, "downvote");
+    }
+  });
+  
+  Template.downvoted.events({
+    'click button': function() {
+      var bookID = Template.currentData()._id;
+      var userID = Meteor.userId();
+      vote(bookID, userID, "none");
     }
   });
 }
@@ -419,6 +442,10 @@ if (Meteor.isServer) {
   
   function normalizeMoniker(moniker) {
     return unidecode(moniker).toUpperCase().replace(/[^ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]/g, '');
+  }
+  
+  function monikerValid(moniker) {
+    return normalizeMoniker(moniker).length >= 3;
   }
   
   function monikerExists(moniker) {
@@ -466,18 +493,35 @@ if (Meteor.isServer) {
     Submissions.update(bookID, {$inc: {upvotes: upvotes, downvotes: downvotes}});
   }
   
-  function voteSubmission(userID, bookID, up) {
+  function voteSubmission(userID, bookID, direction) {
     var votes = Votes.find({'user': userID, 'book': bookID}).fetch();
+    var up = direction == "upvote" ? 1 : (direction == "downvote" ? -1 : 0);
     if (votes.length == 0) {
-      Votes.insert({'user': userID, 'book': bookID, 'up': up});
-      voteBook(bookID, up ? 1 : 0, up ? 0 : 1);
+      if (up != 0) {
+        Votes.insert({'user': userID, 'book': bookID, 'up': up == 1});
+        voteBook(bookID, up == 1 ? 1 : 0, up == -1 ? 1 : 0);
+      }
     } else {
       vote = votes[0];
       var voteID = vote._id;
       var voteUp = vote.up;
       if (voteUp != up) {
         Votes.update({'user': userID, 'book': bookID}, {$set: {'up': up}});
-        voteBook(bookID, up ? 1 : -1, up ? -1 : 1);
+        var nu = 0, nd = 0;
+        if (voteUp == 1 && up == 0) {
+          nu = -1; nd = 0;
+        } else if (voteUp == 1 && up == -1) {
+          nu = -1; nd = 1;
+        } else if (voteUp == 0 && up == 1) {
+          nu = 1; nd = 0;
+        } else if (voteUp == 0 && up == -1) {
+          nu = 0; nd = 1;
+        } else if (voteUp == -1 && up == 1) {
+          nu = 1; nd = -1;
+        } else if (voteUp == -1 && up == 0) {
+          nu = 0; nd = -1;
+        }
+        voteBook(bookID, nu, nd);
       } else {
         return false;
       }

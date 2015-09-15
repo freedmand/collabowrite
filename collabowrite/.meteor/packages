@@ -19,3 +19,5 @@ meteorhacks:npm
 
 npm-container
 reactive-var
+sanjo:jasmine
+velocity:html-reporter

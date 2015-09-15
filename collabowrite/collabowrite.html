@@ -105,7 +105,7 @@
     <p>Title: <input type="text" name="title"></p>
     <p>Body: <textarea name="body"></textarea></p>
     <p>Publish as:
-      <input type="radio" name="author" value="real">{{name}}
+      <input type="radio" name="author" value="real" checked="checked">{{name}}
       <input type="radio" name="author" value="anonymous">Anonymous
     </p>
     <p><input type="submit" value="Submit"></p>
@@ -152,10 +152,18 @@
       {{> upvote_fresh}}
       {{> downvoted}}
     {{else}}
-      {{> upvote_fresh}}
-      {{> downvote_fresh}}
+      {{#if voted "login"}}
+        {{> login_vote}}
+      {{else}}
+        {{> upvote_fresh}}
+        {{> downvote_fresh}}
+      {{/if}}
     {{/if}}
   {{/if}}
+</template>
+
+<template name="login_vote">
+  <span>Sign in to vote!</span>
 </template>
 
 <template name="vote_meter">
@@ -166,17 +174,17 @@
 </template>
 
 <template name="upvote_fresh">
-  <button>Upvote</button>
+  <button style="font-weight: 100;">+</button>
 </template>
 
 <template name="upvoted">
-  <button disabled>Upvoted already</button>
+  <button style="font-weight: 800;">+</button>
 </template>
 
 <template name="downvote_fresh">
-  <button>Downvote</button>
+  <button style="font-weight: 100;">-</button>
 </template>
 
 <template name="downvoted">
-  <button disabled>Downvoted already</button>
+  <button style="font-weight: 800;">-</button>
 </template>
