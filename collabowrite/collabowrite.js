@@ -37,11 +37,11 @@ Router.route('/profile', {
 
 Router.route('/authors/:_moniker', {
   template: 'author',
+  name: 'author',
   data: function() {
     var moniker_norm = this.params._moniker;
     var user = Meteor.users.findOne({'profile.moniker_norm': moniker_norm});
-    var submissions = Submissions.find({'moniker_norm': moniker_norm});
-    return {'user': user, 'submissions': submissions};
+    return {'user': user};
   }
 });
 
@@ -117,10 +117,22 @@ if (Meteor.isClient) {
     }
   });
   
+  Template.author.onCreated(function() {
+    var moniker_norm = this.data.user.profile.moniker_norm;
+    var submissions = this.submissions = new ReactiveVar([]);
+    Meteor.call('grabsubmissions', moniker_norm, function(error, result) {
+      submissions.set(result);
+    });
+  });
+  
   Template.author.helpers({
     'name': function() {
-      console.log(Template.currentData());
-      return Template.currentData().user.profile.moniker;
+      console.log(this.user);
+      return this.user.profile.moniker;
+    },
+    'submissions': function() {
+      console.log(Template.instance());
+      return Template.instance().submissions.get();
     }
   })
   
@@ -434,6 +446,7 @@ if (Meteor.isClient) {
 sampling = null;
 unidecode = null;
 if (Meteor.isServer) {
+  Meteor.users._ensureIndex('profile.moniker_norm', {unique: 1, sparse: 1});
   sampling = Meteor.npmRequire('alias-sampling');
   unidecode = Meteor.npmRequire('unidecode');
   loadDefaults();
@@ -595,6 +608,10 @@ if (Meteor.isServer) {
     },
     'getvote': function(userID, bookID) {
       return getVote(userID, bookID);
+    },
+    'grabsubmissions': function(moniker_norm) {
+      var submissions = Submissions.find({'moniker_norm': moniker_norm}).fetch();
+      return submissions;
     }
   })
 }

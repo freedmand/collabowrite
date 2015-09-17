@@ -9,37 +9,55 @@ loadDefaults = function() {
     Accounts.createUser({
       email: 'freedmand@gmail.com',
       password: 'dsfdsf',
-      profile: {moniker: 'Laura Bergstrom'}
+      profile: {
+        moniker: 'Laura Bergstrom',
+        moniker_norm: "LAURABERGSTROM"
+      }
     });
     
     Accounts.createUser({
       email: 'test@test.io',
       password: 'asdfasdf',
-      profile: {moniker: 'J. K. Rowling'}
+      profile: {
+        moniker: 'J. K. Rowling',
+        moniker_norm: "JKROWLING"
+      }
     });
     
     Accounts.createUser({
       email: 'test2@test.io',
       password: 'asdfasdf',
-      profile: {moniker: 'Laura Bergstrom'}
+      profile: {
+        moniker: 'Chief Edinburgh',
+        moniker_norm: "CHIEFEDINBURGH"
+      }
     });
     
     Accounts.createUser({
       email: 'test3@test.io',
       password: 'asdfasdf',
-      profile: {moniker: 'Penelope Smith'}
+      profile: {
+        moniker: 'Penelope Smith',
+        moniker_norm: "PENELOPESMITH"
+      }
     });
     
     Accounts.createUser({
       email: 'test4@test.io',
       password: 'asdfasdf',
-      profile: {moniker: 'J. H. Parisian'}
+      profile: {
+        moniker: 'J. H. Parisian',
+        moniker_norm: "JHPARISIAN"
+      }
     });
     
     Accounts.createUser({
       email: 'test5@test.io',
       password: 'asdfasdf',
-      profile: {moniker: 'Severus Snape'}
+      profile: {
+        moniker: 'Severus Snape',
+        moniker_norm: "SEVERUSSNAPE"
+      }
     });
   }
   
