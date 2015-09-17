@@ -35,6 +35,16 @@ Router.route('/profile', {
   name: 'profile',
 });
 
+Router.route('/authors/:_moniker', {
+  template: 'author',
+  data: function() {
+    var moniker_norm = this.params._moniker;
+    var user = Meteor.users.findOne({'profile.moniker_norm': moniker_norm});
+    var submissions = Submissions.find({'moniker_norm': moniker_norm});
+    return {'user': user, 'submissions': submissions};
+  }
+});
+
 Router.route('/submissions/:_id', {
   template: 'book_view',
   data: function(){
@@ -107,6 +117,13 @@ if (Meteor.isClient) {
     }
   });
   
+  Template.author.helpers({
+    'name': function() {
+      console.log(Template.currentData());
+      return Template.currentData().user.profile.moniker;
+    }
+  })
+  
   Template.book_excerpt.helpers({
     'excerpt': function(e) {
       return this.body.substr(0, 50) + '...';
@@ -140,13 +157,20 @@ if (Meteor.isClient) {
         var title = $('[name=title]').val();
         var body = $('[name=body]').val();
         var author = $('[name=author]').val();
+        var moniker_norm = null;
         if (author == "real") {
           author = Meteor.user().profile.moniker;
+          moniker_norm = Meteor.user().profile.moniker_norm;
         } else {
           author = "Anonymous";
+          moniker_norm = "ANONYMOUS";
         }
         
-        Submissions.insert({'title':title, 'body': body, 'author': author, 'userId': Meteor.userId, "upvotes": 0, "downvotes": 0}, function(error) {
+        var hidden = {};
+        hidden['moniker_norm'] = Meteor.user().profile.moniker_norm;
+        hidden['userId'] = Meteor.userId;
+        
+        Submissions.insert({'title':title, 'body': body, 'author': author, 'moniker_norm': moniker_norm, 'hidden': hidden, "upvotes": 0, "downvotes": 0}, function(error) {
           if (!error) {
             Router.go("listing");
           }
@@ -407,9 +431,12 @@ if (Meteor.isClient) {
   });
 }
 
+sampling = null;
+unidecode = null;
 if (Meteor.isServer) {
-  var sampling = Meteor.npmRequire('alias-sampling');
-  var unidecode = Meteor.npmRequire('unidecode');
+  sampling = Meteor.npmRequire('alias-sampling');
+  unidecode = Meteor.npmRequire('unidecode');
+  loadDefaults();
   
   var male_initial_generator;
   var female_initial_generator;

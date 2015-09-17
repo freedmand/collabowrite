@@ -11,6 +11,13 @@ Features to add:
 * front page that shows latest submissions
 * maybe ability to vote on ideas that then better writers actualize
 * ability to revise whole book upon completion
+* verify email address
+* separate modes to vote on titles, cover images, modular content
+* ability to create your own book and decide modes of creation, time frames
+* extensive testing set up. Ability to change timeline
+* load testing
+* break up large script into myriad intuitive files
+* implemented reserved user names
 
 TODO:
 password change (template written)
