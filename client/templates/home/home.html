@@ -1,0 +1,332 @@
+<template name="Home">
+  <!--<img class="ui image" src="images/bookmark.png" style="-->
+  <!--position: fixed;-->
+  <!--top: 0;-->
+  <!--left: 5%; "> -->
+  <div class="ui fluid container gradient-background">
+    <div class="ui basic very padded center aligned segment">
+      <img class="ui centered medium image" src="images/collabowrite_text_inverted.svg" />
+      <div class="ui basic padded segment">
+        <img class="ui centered medium image" src="images/collabowrite_logo_inverted.svg">
+      </div>
+      <p class="ui center aligned sub-logo">
+        Let’s write a book together.
+      </p>
+    </div>
+  </div>
+  <div class="ui text container">
+    <div id="email-jump" class="ui very padded basic center aligned segment">
+      <h2 class="ui header">COMING THIS NOVEMBER</h2>
+      <form class="ui form">
+        <div class="sixteen wide field">
+          <div class="ui left icon input">
+            <input name="email" id="email-box" type="email" placeholder="Email">
+            <i class="mail icon"></i>
+          </div>
+          <button id="update-button" type="submit" class="ui large tertiary button">Stay Updated</button>
+          <div id="email-submit-dialog" class="ui icon hidden message">
+            <i class="close icon"></i>
+            <i class="inbox icon"></i>
+            <div class="content">
+              <div class="header">
+                Thanks, your email has been submitted!
+              </div>
+              <p>We&rsquo;ll send you updates when collabowrite is ready!</p>
+            </div>
+          </div>
+          <div id="email-submit-error" class="ui negative icon hidden message">
+            <i class="close icon"></i>
+            <div class="content">
+              The email address you entered is invalid, please try again.
+            </div>
+          </div>
+          <div id="email-duplicate-error" class="ui blue icon hidden message">
+            <i class="close icon"></i>
+            <div class="content">
+              You&rsquo;re already signed up for the mailing list.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="ui horizontal divider">
+    <i class="big-icon ico-butterfly"></i>
+  </div>
+
+  <div class="ui basic center aligned segment">
+    <h1 class="ui header">
+      <div class="content">How it works
+        <div class="sub header">
+          <h2>A book in 30 days</h2>
+        </div>
+      </div>
+    </h1>
+    <div class="ui stackable three column grid">
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui medium image" src="images/submissions_board_sketch.svg">
+          <div class="content">Write pages</div>
+        </h2>
+        <p>Anyone can write a page of the book.</p>
+      </div>
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui medium image" src="images/poll_book_sketch.svg">
+          <div class="content">
+            Vote on pages
+          </div>
+        </h2>
+        <p>The posted pages each day are voted on. At the end of the day, the winning page is added to the book.</p>
+      </div>
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui medium image" src="images/calendar_book_sketch.svg">
+          <div class="content">A page a day</div>
+        </h2>
+        <p>The book grows as the cycle continues every day. At the end of the month, we have a Collabowritten book!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui basic very padded center aligned whitesmoke segment">
+    <h1 class="ui blue header" id="begin-header">
+      How does it begin?
+      <div class="sub header">
+        <h2>A week for the first page</h2>
+      </div>
+    </h1>
+    <div class="ui stackable grid container">
+      <div class="nine wide middle aligned column calendar-column">
+        <img class="ui large centered image" src="images/calendar.svg">
+      </div>
+      <div class="seven wide middle aligned left aligned column">
+        <h2 class="ui header" id="begin-header">
+          Start brainstorming now
+        </h2>
+        <p>The first page is important to how a book unfolds, so we&rsquo;re opening the submission system the week before November*.</p>
+        <p>Start writing and planning the start of Collabowrite now!</p>
+        <div class="disclaimer">* From October 25 through November 1st, first page submissions can be posted and voted upon. The highest rated page will be picked at 11:59pm November 1st. Subsequent submissions will take place daily until the book is completed at 11:59pm on November 30th. Days start at midnight and end at 11:59pm Pacific Standard Time (PST).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui basic center aligned segment">
+    <h1 class="ui header">
+      <div class="content">Ground rules
+        <div class="sub header">
+          <h2>Writing for all audiences</h2>
+        </div>
+      </div>
+    </h1>
+    <div class="ui stackable three column grid">
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui small image" src="images/fiction.svg">
+          <div class="content">Only fiction</div>
+        </h2>
+        <p>No real people or businesses should be discussed.</p>
+      </div>
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui small image" src="images/plagiarism.svg">
+          <div class="content">
+            No plagiarism
+          </div>
+        </h2>
+        <p>We trust you to be honorable and not copy other&rsquo;s works.</p>
+      </div>
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui small image" src="images/dollar_sign.svg">
+          <div class="content">No advertising</div>
+        </h2>
+        <p>All posted content should be purely creative in spirit.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui horizontal divider">
+    <i class="big-icon ico-butterfly"></i>
+  </div>
+
+  <div class="ui basic center aligned segment">
+    <h1 class="ui icon header">
+      <img class="ui large centered image" src="images/monkey_evolution.svg">
+      <div class="content">
+        Revolutionary. Evolutionary.
+        <div class="sub header">
+          <h2>Our inspiration for Collabowrite</h2>
+        </div>
+      </div>
+    </h1>
+    <div class="ui left aligned text container">
+      <p>We were initially going to employ monkeys at typewriters to write books, incentivizing them with bananas to randomly hit keys.</p>
+      <p>We ran some experiments and found monkeys at typewriters were not practical for book creation anytime soon. See below for our calculations.</p>
+    </div>
+  </div>
+
+  <div class="ui basic very padded whitesmoke segment">
+    <div class="ui stackable grid container">
+      <div class="seven wide column">
+        <img class="ui medium image" src="images/monkey_typewriter.svg">
+        <h2 class="ui header">
+          The Infinite Monkey Experiment
+        </h2>
+        <p>A <a href="https://en.wikipedia.org/wiki/Infinite_monkey_theorem" target="_blank">famous thought experiment</a> says that an infinite number of monkeys at typewriters randomly hitting keys will eventually type the complete works of Shakespeare.</p>
+        <p>We ran a few calculations to see how long it would actually take.</p>
+      </div>
+      <div class="nine wide column">
+        <div class="ui experiment segments">
+          <div class="ui center aligned compact inverted blue experiment-header segment">
+            <h3 class="ui calculator-header icon header">
+              <i class="calculator icon"></i>
+              <div class="content">
+                Monkey Experiment Calculator
+              </div>
+            </h3>
+          </div>
+          <div class="ui left aligned segment">
+            <div class="ui experiment-grid center aligned grid">
+              <div class="row">
+                <div class="sixteen wide mobile five wide tablet five wide computer column">
+                  How long will
+                </div>
+                <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
+                  <div id="monkey-dropdown" class="ui inline custom-bordered dropdown" tabindex="0">
+                    <div class="text">1 monkey</div>
+                    <input type="hidden" value="1">
+                    <i class="dropdown icon"></i>
+                    <div class="menu transition hidden" tabindex="-1">
+                      <div class="item" data-value="1">1 monkey</div>
+                      <div class="item" data-value="1000">1,000 monkeys</div>
+                      <div class="item active selected" data-value="billion">1 billion monkeys</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="sixteen wide mobile five wide tablet five wide computer column">
+                  take to write
+                </div>
+                <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
+                  <div id="text-dropdown" class="ui inline custom-bordered dropdown" tabindex="0">
+                    <div class="text">the word “collabowrite”</div>
+                    <input type="hidden" value="word">
+                    <i class="dropdown icon"></i>
+                    <div class="menu transition hidden" tabindex="-1">
+                      <div class="item" data-value="word">the word “collabowrite”</div>
+                      <div class="item" data-value="sentence">1 sentence of Hamlet</div>
+                      <div class="item" data-value="page">1 page of Hamlet</div>
+                      <div class="item" data-value="book">all of Hamlet</div>
+                      <div class="item active selected" data-value="works">Shakespeare’s Complete Works</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui horizontal divider">APPROXIMATE CALCULATIONS</div>
+            <div class="">
+              <h3 class="ui left aligned blue header">
+                <i class="calendar icon"></i>
+                <div class="content">
+                  <span id="year-count">1.3 billion</span><span id="year-superscript" class="superscript"></span> years
+                  <div id="year-sub" class="sub header">That&rsquo;s a quarter of how long scientists believe the world to have existed!</div>
+                </div>
+              </h3>
+            </div>
+            <div class="">
+              <h3 class="ui left aligned blue header">
+                <i class="leaf icon"></i>
+                <div class="content">
+                  <span id="banana-count">480 billion</span><span id="banana-superscript" class="superscript"></span> bananas
+                  <div id="banana-sub" class="sub header">That&rsquo;s all the bananas produced globally in 14 years!</div>
+                </div>
+              </h3>
+            </div>
+            <div class="ui divider"></div>
+            <div class="disclaimer">
+              * expected value calculations assuming monkeys type 100 words per minute randomly and continuously and consume one banana per day
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui basic center aligned segment">
+    <h1 class="ui icon header">
+      <div class="content">
+        A human experience
+      </div>
+    </h1>
+    <div class="ui left aligned text container">
+      <p>We learned that monkeys are not the most creative authors. We chose humans for Collabowrite since they have a better grasp on the English language than any other species.</p>
+      <p>Even though humans make more predictable writing decisions, we have no idea how the book will turn out!</p>
+    </div>
+    <h1 class="ui icon header">
+      <div class="sub header">
+        <h2>Anything and everything</h2>
+      </div>
+    </h1>
+    <div class="ui stackable three column grid">
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui small image" src="images/lightbulb.svg">
+          <div class="content">Anyone can have an idea</div>
+        </h2>
+        <p>Who knows? Your idea could result in a bizarre plot twist and change the whole course of the book.</p>
+      </div>
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui small image" src="images/quill.svg">
+          <div class="content">
+            Anyone can have a voice
+          </div>
+        </h2>
+        <p>Writing should be democratic. Your playing field is even, and the crowds will decide.</p>
+      </div>
+      <div class="center aligned column">
+        <h2 class="ui icon header">
+          <img class="ui small image" src="images/chance.svg">
+          <div class="content">Anything could happen</div>
+        </h2>
+        <p>We&rsquo;re excited that the Collabowrite book could literally be about anything and are leaving it as open-ended as possible.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui horizontal divider">
+    <i class="big-icon ico-butterfly"></i>
+  </div>
+
+  <div class="ui basic center aligned segment">
+    <h1 class="ui icon header">
+      <div class="content">
+        Novel novels
+        <div class="sub header">
+          <h2>What&rsquo;s next?</h2>
+        </div>
+      </div>
+    </h1>
+
+    <div class="ui stackable grid container">
+      <div class="seven wide middle aligned column left aligned">
+        <h2 class="ui header" id="begin-header">
+          Getting the book published
+        </h2>
+        <p>If our experiment is successful, we will publish the resulting book, divvying out royalties to the contributing authors.</p>
+        <p>You can support us by participating, writing and voting on pages, and letting your friends know.</p>
+        <h2 class="ui header">
+          Future steps
+        </h2>
+        <p>We envision you being able to create your own Collabowritten book, with your own timeline.</p>
+        <p>30 pages may seem short for a book &mdash; we&rsquo;ll experiment with different lengths and styles in the coming seasons!</p>
+      </div>
+      <div class="nine wide middle aligned center aligned column">
+        <img class="ui medium centered image" src="images/collabowrite_book.svg">
+      </div>
+    </div>
+  </div>
+
+</template>

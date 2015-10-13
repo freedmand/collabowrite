@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="62px" height="109px" viewBox="0 0 62 109" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>bookmark</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="bookmark" sketch:type="MSLayerGroup" transform="translate(-2.000000, -1.000000)">
+            <path d="M4.91677919,1.11188993 C3.81552782,1.11188993 2.92278719,2.00676659 2.92278719,3.11016776 L2.92278719,102.626705 C2.92278719,103.730324 3.56276026,103.986301 4.33461001,103.216007 L28.4765966,79.1226937 C29.2563248,78.3445375 30.5291591,78.3263598 31.3325992,79.0945682 L56.5897185,103.244134 C57.387317,104.006757 58.0338983,103.730109 58.0338983,102.626707 L58.0338983,3.1101678 C58.0338983,2.00654941 57.1459125,1.11188993 56.0399063,1.11188993 L4.91677919,1.11188993 Z" id="Path-504" fill="#0075B1" sketch:type="MSShapeGroup"></path>
+            <path d="M10.8828809,8.20866412 C9.78162952,8.20866412 8.88888889,9.10354079 8.88888889,10.206942 L8.88888889,109.72348 C8.88888889,110.827098 9.52886196,111.083075 10.3007117,110.312781 L34.4426983,86.2194679 C35.2224265,85.4413117 36.4952608,85.423134 37.2987009,86.1913424 L62.5558202,110.340909 C63.3534187,111.103531 64,110.826883 64,109.723482 L64,10.206942 C64,9.1033236 63.1120142,8.20866412 62.006008,8.20866412 L10.8828809,8.20866412 Z" id="Path-504-Copy" fill="#1E3E85" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

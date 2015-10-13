@@ -1,0 +1,163 @@
+/*****************************************************************************/
+/* Home: Style */
+/*****************************************************************************/
+.home {
+}
+
+.gradient-background {
+    background: rgb(14,66,73) !important;
+    background: -moz-linear-gradient(-45deg,  rgba(14,66,73,1) 1%, rgba(14,36,73,1) 16%, rgba(13,16,68,1) 63%, rgba(38,8,43,1) 89%, rgba(38,8,43,1) 89%, rgba(49,12,66,1) 100%) !important;
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(1%,rgba(14,66,73,1)), color-stop(16%,rgba(14,36,73,1)), color-stop(63%,rgba(13,16,68,1)), color-stop(89%,rgba(38,8,43,1)), color-stop(89%,rgba(38,8,43,1)), color-stop(100%,rgba(49,12,66,1))) !important;
+    background: -webkit-linear-gradient(-45deg,  rgba(14,66,73,1) 1%,rgba(14,36,73,1) 16%,rgba(13,16,68,1) 63%,rgba(38,8,43,1) 89%,rgba(38,8,43,1) 89%,rgba(49,12,66,1) 100%) !important;
+    background: -o-linear-gradient(-45deg,  rgba(14,66,73,1) 1%,rgba(14,36,73,1) 16%,rgba(13,16,68,1) 63%,rgba(38,8,43,1) 89%,rgba(38,8,43,1) 89%,rgba(49,12,66,1) 100%) !important;
+    background: -ms-linear-gradient(-45deg,  rgba(14,66,73,1) 1%,rgba(14,36,73,1) 16%,rgba(13,16,68,1) 63%,rgba(38,8,43,1) 89%,rgba(38,8,43,1) 89%,rgba(49,12,66,1) 100%) !important;
+    background: linear-gradient(135deg,  rgba(14,66,73,1) 1%,rgba(14,36,73,1) 16%,rgba(13,16,68,1) 63%,rgba(38,8,43,1) 89%,rgba(38,8,43,1) 89%,rgba(49,12,66,1) 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0e4249', endColorstr='#310c42',GradientType=1 ) !important;
+
+}
+
+#update-button {
+    margin-top: 0.5em;
+}
+
+.sub-logo {
+    font-size: 28px;
+    color: #E8E8E8;
+    line-height: 34px;
+}
+
+#begin-header {
+    margin-bottom: 0.5em;
+}
+
+.email-box {
+    background: #F1F1F1;
+    border: 2px solid #979797;
+    border-radius: 16px;
+    font-size: 28px;
+    color: #787878;
+    outline: none;
+    line-height: 38px;
+    padding-left: 30px;
+    padding-right: 30px;
+    text-align: center;
+}
+
+.topic-header-light {
+    font-size: 36px;
+    color: #797979;
+    line-height: 34px;
+    font-weight: 300;
+    font-family: Lato;
+}
+
+.topic-header-regular {
+    font-size: 36px;
+    color: #797979;
+    line-height: 34px;
+    font-weight: 400;
+    font-family: Lato;
+}
+
+.topic-text {
+    font-size: 22px;
+    color: #797979;
+    line-height: 34px;
+    padding-left: 1.5em;
+}
+
+.big-button {
+    background: #0075B1;
+    border-radius: 22px;
+    /*font-family: AvenirNext-DemiBold;*/
+    font-size: 32px;
+    color: #FFFFFF;
+    line-height: 44px;
+    display: inline-block;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.custom-bordered {
+    padding-left: 7px !important;
+    margin-left: 3px !important;
+    margin-bottom: 0.5em !important;
+    background: #00ADEF;
+    color: #F3F3F3 !important;
+    border-radius: 8px;
+}
+
+.superscript {
+    font-size: 0.7em;
+    vertical-align: super;
+    margin-left: 2px;
+}
+
+.disclaimer {
+    font-size: 0.8em;
+    line-height: 1.2;
+    text-indent: -0.6em;
+    margin-left: 0.6em;
+}
+
+.whitesmoke {
+    background: #F5F5F5 !important;
+}
+
+.experiment-header {
+    padding-bottom: 0 !important;
+}
+
+.experiment-grid .row .column {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+.calculator-header {
+    margin-bottom: 10px !important;
+}
+
+.experiment-grid {
+    padding-top: 18px !important;
+    padding-bottom: 14px !important;
+}
+
+.experiment-grid .row {
+    padding: 0 !important;
+}
+
+@media (min-width: 768px) {
+    .experiment {
+        min-width: 400px;
+    }
+
+    .experiment-grid .row .column:first-child {
+        text-align: right !important;
+    }
+
+    .experiment-grid .row .column:nth-child(2) {
+        text-align: left !important;
+    }
+}
+
+.night {
+    background: #455969 !important;
+}
+
+.big-icon {
+    font-size: 23pt;
+    color: grey;
+}
+
+.large-icon {
+    font-size: 3em;
+}
+
+p {
+    font-size: 1.2em;
+    color: #808080;
+}
+
+.ui.icon.header .content {
+    margin-top: 0.5em;
+}

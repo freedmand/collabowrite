@@ -1,0 +1,50 @@
+/*****************************************************************************/
+/* Login: Style */
+/*****************************************************************************/
+.login-container {
+    max-width: 25em !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+#background-container {
+    background: #EAEAEA;
+    height: 600px;
+}
+
+.slightly-padded {
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+}
+
+#password-progress {
+    margin-top: -3px !important;
+}
+
+#password-progress .bar {
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+}
+
+#resend-text.switch {
+    opacity: 0 !important;
+}
+
+#resend-loader {
+    position: absolute !important;
+    margin-top: 4px !important;
+    opacity: 0 !important;
+}
+
+#resend-loader.switch {
+    opacity: 1 !important;
+}
+
+#bottom-clear-segment {
+    padding-bottom: 0 !important;
+}
+
+.modal {
+    background-color: rgba(145, 180, 206, 0.2) !important;
+    border-radius: 16px !important;
+}
