@@ -13,20 +13,14 @@ Using this method, we will write a 30 page book November 2015, one page for each
 
 Since the book will be so influenced by how the first page turns out, we have an exception to these rules: the first page. We will open the submission system for the first page on October 25, 2015 and leave it open through the end of November 1st.
 
-## What's been implemented
-* An attractive landing page
-* An overly complex login system (not reachable from the first page yet)
-* Testing for the login system
-* Too much vector artwork
-
 # Installation instructions
 
-## Dependencies
+### Dependencies
 * Meteor (1.2)
 
 After cloning the repo, simply type `meteor` in the project directory to run.
 
-## Environment variables
+### Environment variables
 
 I am connecting to some external services such as a Mongo DB provider, Mandrill for sending emails and Google Analytics for tracking pageviews. These services only run in production and their log-ins are not included in the repo for obvious reasons. You can set the following environment variables:
 
@@ -35,19 +29,23 @@ I am connecting to some external services such as a Mongo DB provider, Mandrill 
 
 In the absence of the **MANDRILL_EMAIL** environment variable, all email sending will simply be logged to the console.
 
-## Packages
+### Packages
 
 The full list of packages can be seen at any time in `.meteor/packages` (for packages installed through Atmosphere) and `packages.json` (for Node packages). These will be installed automagically be Meteor.
 
-# Testing
+## Testing
 
 I am using [Velocity](https://velocity.readme.io/) with [Jasmine](http://jasmine.github.io/) for testing. I have only created server tests so far for the log-in functionality. These tests can be found in `tests/server/integration`. At the time I wrote the tests, there was a known bug with Meteor 1.2 in which Velocity could not run server unit tests, thus all server-side tests are currently being run as integration tests.
 
-# Helping
+# Goals
 
-I welcome any and all contributions. If you want to start contributing and need help, please email [dylan@collabowrite.io](mailto:dylan@collabowrite.io).
+### What's been implemented
+* An attractive landing page
+* An overly complex login system (not reachable from the first page yet)
+* Testing for the login system
+* Too much vector artwork
 
-## What needs to be implemented
+### What needs to be implemented
 * The voting system
 * The final touches to account creation
 * **The submission system:** I am envisioning a Reddit-esque style where each post for a day pops up and is sortable by "fresh", "new", and "top". Pages can be upvoted. I am contemplating doing away with downvoting since it encourages negativity, instead offering an option to flag content (ads, non-fiction, etc.).
@@ -57,12 +55,12 @@ I welcome any and all contributions. If you want to start contributing and need 
 * **A proofreading or editing system:** the fine mechanics of this are still being worked out. It will either be a way to comment with just a proofreading comment (i.e. replace certain characters with these characters). These comments can be upvoted/downvoted to crowdsource editing. The book and page view could have a toggle to view prominent proofreading suggestions.
 * Testing for everything
 
-## Future goals
+### Future goals
 * Allow users to create their own books, specify the rules and genres, timeline of how many pages and how long each page iteration will take (or how many pages must be submitted on a given iteration).
 * Roll out more books in the future and experiment with different epoch times (half-day, hour, week, etc.)
 
-# Get involved
-Interested in helping. Collabowrite is open source and welcomes contributions.
+## Get involved
+Interested in helping. Collabowrite is open source and welcomes contributions. If you want to start contributing and need help, please email [dylan@collabowrite.io](mailto:dylan@collabowrite.io).
 
-## Contributors (all contributors should add their names here):
+### Contributors (all contributors should add their names here):
 * freedmand (dylan@collabowrite.io)
