@@ -16,9 +16,9 @@ Since the book will be so influenced by how the first page turns out, we have an
 # Installation instructions
 
 ### Dependencies
-* Meteor (1.2)
+* [Meteor (1.2)](https://www.meteor.com/install)
 
-After cloning the repo, simply type `meteor` in the project directory to run.
+Install Meteor by following the [installation instruction given on the project website](https://www.meteor.com/install). After it has been successfully installed, simply type `meteor` in the project directory to run the project. All dependency packages should be automatically installed.
 
 ### Environment variables
 
