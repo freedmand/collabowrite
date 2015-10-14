@@ -68,7 +68,7 @@ The organization should be fairly intuitive. I used [iron-cli](https://github.co
 This project is licensed under [GNU General Public License (GPL) v3.0](http://www.gnu.org/licenses/gpl-3.0.en.html). Feel free to share, modify, and redistribute the code, so long as it remains open source.
 
 ## Get involved
-Interested in helping. Collabowrite is open source and welcomes contributions. If you want to start contributing and need help, please email [dylan@collabowrite.io](mailto:dylan@collabowrite.io).
+Interested in helping? Collabowrite is open source and welcomes contributions. If you want to start contributing and need help, please email [dylan@collabowrite.io](mailto:dylan@collabowrite.io).
 
 ### Contributors (all contributors should add their names here):
 * freedmand (dylan@collabowrite.io)
