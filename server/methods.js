@@ -34,45 +34,54 @@ Meteor.methods({
     }
   },
   'server/send_email': function(to, subject, html, text) {
-    if (typeof text === 'undefined') {
-      Mandrill.messages.send({
-        "key": process.env.MANDRILL_KEY,
-        "message": {
-          "html": html,
-          "subject": subject,
-          "from_email": process.env.MANDRILL_EMAIL,
-          "from_name": "Collabowrite",
-          "to": [
-            {
-              "email": to,
-              "type": "to"
-            }
-          ],
-          "headers": {
-            "Reply-To": process.env.MANDRILL_EMAIL
-          }
-        }
-      });
+    // not connected to a Mandrill account; just log to console
+    if (typeof process.env.MANDRILL_EMAIL === undefined) {
+      console.log('Sending email:');
+      console.log('*      TO: ' + to);
+      console.log('* SUBJECT:' + subject);
+      console.log('*    HTML:' + html);
+      console.log('*    TEXT:' + text);
     } else {
-      Mandrill.messages.send({
-        "key": process.env.MANDRILL_KEY,
-        "message": {
-          "html": html,
-          "text": text,
-          "subject": subject,
-          "from_email": process.env.MANDRILL_EMAIL,
-          "from_name": "Collabowrite",
-          "to": [
-            {
-              "email": to,
-              "type": "to"
+      if (typeof text === 'undefined') {
+        Mandrill.messages.send({
+          "key": process.env.MANDRILL_KEY,
+          "message": {
+            "html": html,
+            "subject": subject,
+            "from_email": process.env.MANDRILL_EMAIL,
+            "from_name": "Collabowrite",
+            "to": [
+              {
+                "email": to,
+                "type": "to"
+              }
+            ],
+            "headers": {
+              "Reply-To": process.env.MANDRILL_EMAIL
             }
-          ],
-          "headers": {
-            "Reply-To": process.env.MANDRILL_EMAIL
           }
-        }
-      });
+        });
+      } else {
+        Mandrill.messages.send({
+          "key": process.env.MANDRILL_KEY,
+          "message": {
+            "html": html,
+            "text": text,
+            "subject": subject,
+            "from_email": process.env.MANDRILL_EMAIL,
+            "from_name": "Collabowrite",
+            "to": [
+              {
+                "email": to,
+                "type": "to"
+              }
+            ],
+            "headers": {
+              "Reply-To": process.env.MANDRILL_EMAIL
+            }
+          }
+        });
+      }
     }
   },
   'server/send_verification_email': function(to, verification) {

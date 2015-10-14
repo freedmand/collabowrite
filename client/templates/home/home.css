@@ -161,3 +161,8 @@ p {
 .ui.icon.header .content {
     margin-top: 0.5em;
 }
+
+.vertical-padded {
+    margin-top: 0.2em !important;
+    margin-bottom: 0.2em !important;
+}
