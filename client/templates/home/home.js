@@ -133,26 +133,18 @@ calculations = {
 
 function hide(selector) {
   if ($(selector).is(":visible")) {
-    $(selector)
-        .slideUp('slow')
-        .animate(
-        { opacity: 0 },
-        { queue: false, duration: 'slow' }
-    );
+    $(selector).transition('fade up');
   }
 }
 
 function show(selector) {
-  $(selector).css('opacity', 0)
-      .slideDown('slow')
-      .animate(
-      { opacity: 1 },
-      { queue: false, duration: 'slow' }
-  );
+  if (!$(selector).is(":visible")) {
+    $(selector).transition('fade down');
+  }
 }
 
 Template.Home.events({
-  "input #email-box": function(event, template) {
+  "input #email-box": function(event) {
     hide('#email-submit-dialog');
     hide('#email-submit-error');
     hide('#email-duplicate-error');
@@ -165,18 +157,7 @@ Template.Home.events({
       button.removeClass('primary').addClass('tertiary');
     }
   },
-  "click #learn-more": function(event, template) {
-      $('html,body').animate({
-        scrollTop: $("#learn-jump").offset().top
-      }, 'slow');
-    $(event.target).blur();
-  },
-  "click #email-link": function(event, template) {
-    $('html,body').animate({
-      scrollTop: $("#email-jump").offset().top
-    }, 'slow');
-  },
-  "submit form": function(event, template) {
+  "submit form": function(event) {
     event.preventDefault();
     var email = $('[name=email]').val().trim();
     if (email.length != 0) {
@@ -197,7 +178,7 @@ Template.Home.events({
       });
     }
   },
-  "click .close.icon": function(event, template) {
+  "click .close.icon": function(event) {
     hide($(event.target).closest('.message'));
   }
 });
@@ -220,8 +201,7 @@ Template.Home.onCreated(function () {
               {
                 type: 'email',
                 prompt: 'Enter a valid email address to receive updates.'
-              },
-
+              }
             ]
           }
         }
@@ -229,10 +209,11 @@ Template.Home.onCreated(function () {
 });
 
 Template.Home.onRendered(function () {
-  $('.ui.dropdown').dropdown('restore defaults');
+  var dropdown = $('.ui.dropdown');
+  dropdown.dropdown('restore defaults');
   $('.ui.accordion').accordion();
 
-  $('.ui.dropdown').on('click', function() {
+  dropdown.on('click', function() {
     var monkeys = $('#monkey-dropdown').dropdown('get value');
     var text = $('#text-dropdown').dropdown('get value');
     _.each(calculations[monkeys][text], function(value, key) {

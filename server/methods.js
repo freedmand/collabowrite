@@ -18,12 +18,13 @@ SSR.compileTemplate('EmailVerification', compileTemplate('email_verification', t
 SSR.compileTemplate('PasswordReset', compileTemplate('password_reset', true));
 SSR.compileTemplate('EmailList', compileTemplate('email_list', true));
 
+var email_mocked = false;
+
 Meteor.methods({
   'server/normalize_moniker': function (moniker) {
     var unidecode = Meteor.npmRequire('unidecode');
     var normalized = unidecode(moniker);
-    var sanitized = normalized.toLowerCase().replace(/[^abcdefghijklmnopqrstuvwxyz0123456789]/g, '');
-    return sanitized;
+    return normalized.toLowerCase().replace(/[^abcdefghijklmnopqrstuvwxyz0123456789]/g, '');
   },
   'server/insert_email': function(email) {
     try {
@@ -35,53 +36,52 @@ Meteor.methods({
   },
   'server/send_email': function(to, subject, html, text) {
     // not connected to a Mandrill account; just log to console
-    if (typeof process.env.MANDRILL_EMAIL === undefined) {
-      console.log('Sending email:');
-      console.log('*      TO: ' + to);
-      console.log('* SUBJECT:' + subject);
-      console.log('*    HTML:' + html);
-      console.log('*    TEXT:' + text);
+    if (typeof process.env.MANDRILL_EMAIL === 'undefined' && !email_mocked) {
+      Mandrill.messages.send = function(json) {
+        console.log(json);
+      };
+      email_mocked = true;
+    }
+
+    if (typeof text === 'undefined') {
+      Mandrill.messages.send({
+        "key": process.env.MANDRILL_KEY,
+        "message": {
+          "html": html,
+          "subject": subject,
+          "from_email": process.env.MANDRILL_EMAIL,
+          "from_name": "Collabowrite",
+          "to": [
+            {
+              "email": to,
+              "type": "to"
+            }
+          ],
+          "headers": {
+            "Reply-To": process.env.MANDRILL_EMAIL
+          }
+        }
+      });
     } else {
-      if (typeof text === 'undefined') {
-        Mandrill.messages.send({
-          "key": process.env.MANDRILL_KEY,
-          "message": {
-            "html": html,
-            "subject": subject,
-            "from_email": process.env.MANDRILL_EMAIL,
-            "from_name": "Collabowrite",
-            "to": [
-              {
-                "email": to,
-                "type": "to"
-              }
-            ],
-            "headers": {
-              "Reply-To": process.env.MANDRILL_EMAIL
+      Mandrill.messages.send({
+        "key": process.env.MANDRILL_KEY,
+        "message": {
+          "html": html,
+          "text": text,
+          "subject": subject,
+          "from_email": process.env.MANDRILL_EMAIL,
+          "from_name": "Collabowrite",
+          "to": [
+            {
+              "email": to,
+              "type": "to"
             }
+          ],
+          "headers": {
+            "Reply-To": process.env.MANDRILL_EMAIL
           }
-        });
-      } else {
-        Mandrill.messages.send({
-          "key": process.env.MANDRILL_KEY,
-          "message": {
-            "html": html,
-            "text": text,
-            "subject": subject,
-            "from_email": process.env.MANDRILL_EMAIL,
-            "from_name": "Collabowrite",
-            "to": [
-              {
-                "email": to,
-                "type": "to"
-              }
-            ],
-            "headers": {
-              "Reply-To": process.env.MANDRILL_EMAIL
-            }
-          }
-        });
-      }
+        }
+      });
     }
   },
   'server/send_verification_email': function(to, verification) {
