@@ -1,6 +1,8 @@
 # Introducing Collabowrite
 Collabowrite is a collaborative writing website to crowdsource book creation. Let's write a book together.
 
+Live site: [collabowrite.io](http://www.collabowrite.io/)
+
 ## How it works
 We will write a book together, one page a day.
 * Anyone can write a page
@@ -17,6 +19,34 @@ Since the book will be so influenced by how the first page turns out, we have an
 * Testing for the login system
 * Too much vector artwork
 
+# Installation instructions
+
+## Dependencies
+* Meteor (1.2)
+
+After cloning the repo, simply type `meteor` in the project directory to run.
+
+## Environment variables
+
+I am connecting to some external services such as a Mongo DB provider, Mandrill for sending emails and Google Analytics for tracking pageviews. These services only run in production and their log-ins are not included in the repo for obvious reasons. You can set the following environment variables:
+
+* **MANDRILL_EMAIL:** the email address for your Mandrill account. Also the email from which the emails will be sent.
+* **MANDRILL_KEY:** the API key for Mandrill.
+
+In the absence of the **MANDRILL_EMAIL** environment variable, all email sending will simply be logged to the console.
+
+## Packages
+
+The full list of packages can be seen at any time in `.meteor/packages` (for packages installed through Atmosphere) and `packages.json` (for Node packages). These will be installed automagically be Meteor.
+
+# Testing
+
+I am using [Velocity](https://velocity.readme.io/) with [Jasmine](http://jasmine.github.io/) for testing. I have only created server tests so far for the log-in functionality. These tests can be found in `tests/server/integration`. At the time I wrote the tests, there was a known bug with Meteor 1.2 in which Velocity could not run server unit tests, thus all server-side tests are currently being run as integration tests.
+
+# Helping
+
+I welcome any and all contributions. If you want to start contributing and need help, please email [dylan@collabowrite.io](mailto:dylan@collabowrite.io).
+
 ## What needs to be implemented
 * The voting system
 * The final touches to account creation
@@ -31,5 +61,8 @@ Since the book will be so influenced by how the first page turns out, we have an
 * Allow users to create their own books, specify the rules and genres, timeline of how many pages and how long each page iteration will take (or how many pages must be submitted on a given iteration).
 * Roll out more books in the future and experiment with different epoch times (half-day, hour, week, etc.)
 
-## Get involved
-* Interested in helping. Collabowrite is open source and welcomes contributors.
+# Get involved
+Interested in helping. Collabowrite is open source and welcomes contributions.
+
+## Contributors (all contributors should add their names here):
+* freedmand (dylan@collabowrite.io)
