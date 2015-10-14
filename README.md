@@ -37,7 +37,11 @@ The full list of packages can be seen at any time in `.meteor/packages` (for pac
 
 I am using [Velocity](https://velocity.readme.io/) with [Jasmine](http://jasmine.github.io/) for testing. I have only created server tests so far for the log-in functionality. These tests can be found in `tests/server/integration`. At the time I wrote the tests, there was a known bug with Meteor 1.2 in which Velocity could not run server unit tests, thus all server-side tests are currently being run as integration tests.
 
-# Goals
+## Organization
+
+The organization should be fairly intuitive. I used [iron-cli](https://github.com/iron-meteor/iron-cli) to provide scaffolding for the project.
+
+# Project status
 
 ### What's been implemented
 * An attractive landing page
@@ -58,6 +62,10 @@ I am using [Velocity](https://velocity.readme.io/) with [Jasmine](http://jasmine
 ### Future goals
 * Allow users to create their own books, specify the rules and genres, timeline of how many pages and how long each page iteration will take (or how many pages must be submitted on a given iteration).
 * Roll out more books in the future and experiment with different epoch times (half-day, hour, week, etc.)
+
+## License
+
+This project is licensed under [GNU General Public License (GPL) v3.0](http://www.gnu.org/licenses/gpl-3.0.en.html). Feel free to share, modify, and redistribute the code, so long as it remains open source.
 
 ## Get involved
 Interested in helping. Collabowrite is open source and welcomes contributions. If you want to start contributing and need help, please email [dylan@collabowrite.io](mailto:dylan@collabowrite.io).
