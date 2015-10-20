@@ -84,11 +84,11 @@ Meteor.methods({
       });
     }
   },
-  'server/send_verification_email': function(to, verification) {
-    Meteor.call('server/send_email', to, 'Verify your Collabowrite Account', SSR.render('EmailVerification', {verification: verification}));
+  'server/send_verification_email': function(email, link, verification) {
+    Meteor.call('server/send_email', email, 'Verify your Collabowrite Account', SSR.render('EmailVerification', {email: email, link: link, verification: verification}));
   },
-  'server/send_password_reset_email': function(to, verification) {
-    Meteor.call('server/send_email', to, 'Collabowrite Password Reset', SSR.render('PasswordReset', {resetLink: verification}));
+  'server/send_password_reset_email': function(email, link, verification) {
+    Meteor.call('server/send_email', email, 'Collabowrite Password Reset', SSR.render('PasswordReset', {email: email, link: link, verification: verification}));
   },
   'server/send_subscribe_email': function(to) {
     Meteor.call('server/send_email', to, 'Thanks for subscribing', SSR.render('EmailList'));

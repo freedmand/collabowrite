@@ -7,3 +7,15 @@
 //    this.ready();
 //  }
 //});
+
+//Meteor.publish('validation', function(email, v) {
+//  var result;
+//  try {
+//    result = Meteor.call('accounts/validate', email, v);
+//    return result;
+//  } catch (error) {
+//    return {error: error};
+//  }
+//
+//  return this.ready();
+//});

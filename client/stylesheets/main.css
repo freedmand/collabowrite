@@ -1,7 +1,29 @@
 /*****************************************************************************/
 /* main: Style */
 /*****************************************************************************/
-.main {
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.main-wrapper {
+    display: table;
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.main-header {
+    display: table-row;
+}
+
+.main-content {
+    display: table-row;
+    height: 100%;
+}
+
+.main-footer {
+    display: table-row;
 }
 
 @font-face {
@@ -33,3 +55,7 @@ i {
     content: "\e800";
 }
 
+.middle-aligned-td {
+    display: table-cell !important;
+    vertical-align: middle !important;
+}

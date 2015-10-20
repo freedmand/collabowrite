@@ -34,7 +34,7 @@ Meteor.methods({
       verification: verification
     });
 
-    Meteor.call('server/send_verification_email', email, Router.url('verify')  + '?email=' + encodeURIComponent(email) + '&v=' + verification);
+    Meteor.call('server/send_verification_email', email, Router.url('verify'), verification);
     return true;
   },
   'accounts/generate_reset_password_link': function(email) {
@@ -64,7 +64,7 @@ Meteor.methods({
 
     Verified.update(verification._id, {$set: {verifiedType: "passwordReset", verified: false, verification: passwordVerification}});
 
-    Meteor.call('server/send_password_reset_email', email, Router.url('passwordreset') + '?email=' + encodeURIComponent(email) + '&v=' + passwordVerification);
+    Meteor.call('server/send_password_reset_email', email, Router.url('reset'), passwordVerification);
     return true;
   },
   'accounts/resend_verification': function(email) {
@@ -74,7 +74,7 @@ Meteor.methods({
     }
     var verification = Verified.findOne({userId: user[0]._id}).verification;
 
-    Meteor.call('server/send_verification_email', email, Router.url('verify')  + '?email=' + encodeURIComponent(email) + '&v=' + verification);
+    Meteor.call('server/send_verification_email', email, Router.url('verify'), verification);
     return true;
   },
   'accounts/validate': function(email, verification) {

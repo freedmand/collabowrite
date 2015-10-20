@@ -1,17 +1,15 @@
 <template name="Header">
-  <div class="ui secondary pointing menu">
-    <a class="item" href="{{pathFor route='login'}}">Login</a>
-    <a class="item" href="{{pathFor route='signup'}}">Signup</a>
+  <div class="ui inverted attached large secondary blue pointing menu">
+    <a class="toc item">
+      <i class="ico-butterfly"></i>
+    </a>
+    <a class="active item">Submissions</a>
+    <a class="item">Write</a>
+    <a class="item">Read</a>
+    <a class="item">About</a>
+
+    <div class="right item">
+      <a class="sign-up ui blue button">Sign up, or sign in</a>
+    </div>
   </div>
-  <!--<div class="ui secondary pointing menu">-->
-    <!--<a class="active item" href="{{pathFor route='home'}}">Home</a>-->
-    <!--{{#if currentUser}}-->
-      <!--<a class="item" href="#">Logout</a>-->
-    <!--{{else}}-->
-      <!--<a class="item" id="register_link" href="{{pathFor route='register'}}">Register</a>-->
-      <!--<a class="item" id="login_link" href="{{pathFor route='login'}}">Login</a>-->
-    <!--{{/if}}-->
-    <!--<a class="item" id="primary_book_link" href="{{pathFor route='primary'}}">Primary Book</a>-->
-    <!--<a class="item" id="other_book_link" href="{{pathFor route='other'}}">Other Book</a>-->
-  <!--</div>-->
 </template>

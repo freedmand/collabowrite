@@ -164,6 +164,7 @@ Template.AccountModals.onRendered(function () {
     Meteor.call('accounts/generate_reset_password_link', email, function(error, result) {
       if (error) {
         if (error.error === "emailverify") {
+          Session.setPersistent('returnPage', Router.current().url);
           setVerifyModal(
               'We&rsquo;ve sent another verification email to ' + email + '.',
               'You need to verify your email before you can reset the password. Click on the link in the email to finish creating your account.',
@@ -176,6 +177,7 @@ Template.AccountModals.onRendered(function () {
           $('#reset-no-email-prompt').transition('fade up in');
         }
       } else if (result) {
+        Session.setPersistent('returnPage', Router.current().url);
         setVerifyModal(
             'We&rsquo;ve sent a password reset link to ' + email + '.',
             'You should receive it soon. Click on the link in the email to reset your password.',
@@ -209,6 +211,7 @@ Template.AccountModals.onRendered(function () {
                 console.log(error);
                 showErrors('#unknown-error');
               } else {
+                Session.setPersistent('returnPage', Router.current().url);
                 setVerifyModal(
                     'We&rsquo;ve sent a verification email to ' + email + '.',
                     'You should receive it soon. Click on the link in the email to finish creating your account.',
@@ -233,6 +236,7 @@ Template.AccountModals.onRendered(function () {
       Meteor.loginWithPassword({email: email}, password, function(error) {
         if (error) {
           if (error.error === "verification") {
+            Session.setPersistent('returnPage', Router.current().url);
             Meteor.call('accounts/resend_verification', email);
             setVerifyModal(
                 'We&rsquo;ve resent a verification email to ' + email + '.',
@@ -258,6 +262,7 @@ Template.AccountModals.onRendered(function () {
   });
 
   $('.login-back').on('click', function() {
+    $('#forgot-password-modal .form').form('reset');
     $('#create-modal').modal('show');
   });
 
@@ -281,6 +286,7 @@ Template.AccountModals.onRendered(function () {
     $('#resend-button').addClass('disabled');
     $('#resend-text').addClass('switch');
     $('#resend-loader').addClass('switch');
+    Session.setPersistent('returnPage', Router.current().url);
     Meteor.call('accounts/resend_verification', Session.get('email'), function() {
       $('#resend-button').removeClass('disabled');
       $('#resend-text').removeClass('switch');
@@ -320,6 +326,10 @@ Template.AccountModals.onRendered(function () {
     $('#password-progress').progress({
       percent: percent
     });
+  });
+
+  $('#create-modal .close').on('click', function() {
+    $('.form').form('reset');
   });
 
   //$('#create-modal').modal('show');

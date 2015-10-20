@@ -50,7 +50,7 @@ describe("Basic Account Creation", function() {
   });
 
   it("Sends a validation email", function() {
-    expect(Meteor.call).toHaveBeenCalledWith('server/send_verification_email', email, jasmine.any(String));
+    expect(Meteor.call).toHaveBeenCalledWith('server/send_verification_email', email, jasmine.any(String), jasmine.any(String));
   });
 
   it("Sends the right verification code", function() {
