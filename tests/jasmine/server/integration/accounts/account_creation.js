@@ -6,6 +6,12 @@ var email = "test@example.com";
 var localEmail = "test2@example.com";
 var password = "password123";
 
+var moniker1 = 'tester';
+var moniker1_alt1 = 'Tester';
+var moniker1_alt2 = 'TEST_ER';
+
+var moniker2 = 'tester2';
+
 describe("Basic Account Creation", function() {
   var createUser = null;
   var verificationLookup = null;
@@ -194,5 +200,101 @@ describe("Basic Account Creation", function() {
       expect(newVerificationLookup.verifiedType).toEqual("account");
       expect(newVerificationLookup.verified).toBeTruthy();
     });
+  });
+});
+
+describe("Moniker Creation", function() {
+  var createUser = null;
+  var verificationLookup = null;
+  var verificationCode = null;
+
+  beforeEach(function() {
+    resetDatabase();
+    loadDefaultFixtures();
+
+    spyOn(Meteor, 'call').and.callThrough();
+    spyOn(Mandrill.messages, 'send');
+
+    createUser = Meteor.call('accounts/create_user', email, password);
+
+    var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
+    expect(users.length).toEqual(1);
+    var user = users[0];
+    verificationLookup = Verified.findOne({userId: user._id});
+    expect(verificationLookup).not.toBeNull();
+    verificationCode = verificationLookup.verification;
+  });
+
+  it("Allows creation of a moniker in a validated account", function() {
+    var result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+
+    result = Meteor.call('accounts/validate', email, verificationCode);
+    expect(result).toEqual({exists: true, verified: true});
+    result = Meteor.call('accounts/register_moniker', email, moniker1);
+    expect(result).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1_alt1);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1_alt2);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+
+  });
+
+  it("Denies creation of a moniker in an unvalidated account", function() {
+    var result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+
+    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1)}).toThrow();
+
+    result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+  });
+
+  it("Denies creation of duplicate monikers", function() {
+    var result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1_alt1);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1_alt2);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker2);
+    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+
+    // create a new user
+    Meteor.call('accounts/create_user', localEmail, password);
+    var users = Meteor.users.find({emails: {$elemMatch: {address: localEmail}}}).fetch();
+    expect(users.length).toEqual(1);
+    var user = users[0];
+    var newVerificationLookup = Verified.findOne({userId: user._id});
+    expect(newVerificationLookup).not.toBeNull();
+    var newVerificationCode = newVerificationLookup.verification;
+
+    // validate both accounts
+    result = Meteor.call('accounts/validate', localEmail, newVerificationCode);
+    expect(result).toEqual({exists: true, verified: true});
+    result = Meteor.call('accounts/validate', email, verificationCode);
+    expect(result).toEqual({exists: true, verified: true});
+
+    result = Meteor.call('accounts/register_moniker', localEmail, moniker1);
+    expect(result).toBeTruthy();
+    // expect duplicate moniker creation to fail
+    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1)}).toThrow();
+    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1_alt1)}).toThrow();
+    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1_alt2)}).toThrow();
+
+    // expect new moniker creation to work after fails
+    result = Meteor.call('accounts/register_moniker', email, moniker2);
+    expect(result).toBeTruthy();
+
+    result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1_alt1);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker1_alt2);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    result = Meteor.call('accounts/check_moniker', moniker2);
+    expect(_.isEqual(result, {exists: true})).toBeTruthy();
   });
 });

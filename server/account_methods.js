@@ -137,13 +137,50 @@ Meteor.methods({
     return Random.hexString(20).toLowerCase();
   },
   'accounts/check_user': function(email) {
-    var user = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
-    if (user.length == 0) {
+    var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
+    if (users.length == 0) {
       return {exists: false};
     } else {
       return {
         exists: true
       }
     }
+  },
+  'accounts/check_moniker': function(moniker) {
+    var normed = Meteor.call('server/normalize_moniker', moniker);
+    var users = Meteor.users.find({'profile.moniker.monikerNorm': normed}).fetch();
+    if (users.length == 0) {
+      return {exists: false};
+    } else {
+      return {
+        exists: true
+      };
+    }
+  },
+  'accounts/register_moniker': function(email, moniker) {
+    var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
+    if (users.length == 0) {
+      throw new Meteor.Error("usernotfound");
+    }
+
+    var user = users[0];
+    var verificationLookup = Verified.findOne({userId: user._id});
+    if (verificationLookup == null) {
+      throw new Meteor.Error('unknown', 'Verification record not set');
+    } else {
+      if (verificationLookup.verifiedType == "account" && !verificationLookup.verified) {
+        throw new Meteor.Error('not-verified', 'Verify your email address');
+      }
+    }
+
+    var normed = Meteor.call('server/normalize_moniker', moniker);
+    var normedUsers = Meteor.users.find({'profile.moniker.monikerNorm': normed}).fetch();
+    if (normedUsers.length != 0) {
+      throw new Meteor.Error('dup-moniker', 'That moniker is already in use');
+    }
+
+    Meteor.users.update(user._id, {$set:{"profile.moniker.moniker": moniker, "profile.moniker.monikerNorm": normed}});
+
+    return true;
   }
 });
