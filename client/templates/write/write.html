@@ -1,0 +1,24 @@
+<template name="Write">
+  <div id="write-modal" class="ui small basic modal">
+    <div class="ui center aligned whitesmoke segment">
+      <div class="autosave-text">{{autosaveText}}</div>
+      <div class="ui large form">
+        <div class="field">
+          <div class="ui paper segment" data-placeholder="Type your page 1 submission"></div>
+        </div>
+        <div class="wordcount-text">{{wordcount}} words (submission must be between 200 and 500 words)</div>
+        <div class="fields">
+          <div class="ten wide field">
+            <div class="ui input">
+              <input name="summary" type="text" placeholder="Type a summary here&hellip;" maxlength="30">
+            </div>
+          </div>
+          <div class="six wide field">
+            <button id="write-submit" class="ui fluid large primary button">Submit</button>
+          </div>
+        </div>
+        <div class="ui negative message write-error" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+</template>

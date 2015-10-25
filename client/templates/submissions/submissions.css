@@ -1,0 +1,110 @@
+/*****************************************************************************/
+/* Submissions: Style */
+/*****************************************************************************/
+
+.upvote-icon {
+    font-size: 1.3em !important;
+    margin-bottom: -0.2em !important;
+}
+
+.upvote-count {
+    font-size: 1.2em;
+}
+
+.upvote-button {
+    color: grey;
+}
+
+.upvote-button:hover {
+    color: black;
+}
+
+.upvote-button:hover, .comments-button:hover {
+    -webkit-text-stroke: 1px black;
+}
+
+.page-dropdown {
+    font-size: 2em;
+}
+
+.snippet-text {
+    color: #7D7D7D;
+}
+
+.summary-text {
+    font-weight: bold;
+}
+
+.button-td {
+    cursor: pointer;
+    text-align: center;
+    outline: none;
+    background: none;
+    border: none;
+}
+
+.read-more:hover {
+    text-decoration: none;
+}
+
+.content-td {
+    max-width: 33em;
+}
+
+.blue-background {
+    background: #ECF7FB !important;
+}
+
+.white-background {
+    background: white !important;
+}
+
+table {
+    background: white !important;
+}
+
+tr > td {
+    border-top: 0.4em solid #ECF7FB !important;
+    border-bottom: 0.4em solid #ECF7FB !important;
+}
+
+tr:hover {
+    background: #E6F0F5 !important;
+}
+
+@media (max-width: 768px) {
+    .last-item {
+        display: none !important;
+    }
+}
+
+.votes:hover {
+    color: #00ADEF !important;
+    font-weight: bold;
+}
+
+.active-votes {
+    color: #00ADEF !important;
+    font-weight: bold;
+}
+
+.active-votes:hover {
+    color: rgba(0, 0, 0, 0.4) !important;
+    font-weight: normal;
+}
+
+.vote-clickable {
+    cursor: pointer;
+}
+
+.submission-formatted {
+    font-size: 1em !important;
+    line-height: 1.5;
+    color: black !important;
+    font-family: Georgia, "Times New Roman", Times, serif !important;
+}
+
+.submission-formatted i {
+    font-family: inherit !important;
+    font-style: italic !important;
+}

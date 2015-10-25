@@ -1,0 +1,60 @@
+/*****************************************************************************/
+/* Write: Style */
+/*****************************************************************************/
+.paper {
+    display: block;
+    color: black;
+    outline: none;
+    text-align: left;
+    height: 20em;
+    white-space: pre-wrap;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    font-size: 1em !important;
+    font-family: Georgia, "Times New Roman", Times, serif !important;
+    overflow: scroll;
+}
+
+.paper p {
+    font-size: 1em !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-family: Georgia, "Times New Roman", Times, serif !important;
+}
+
+.paper i {
+    font-family: inherit !important;
+    font-style: italic !important;
+}
+
+.autosave-text {
+    color: #B1B1B1;
+    text-align: right;
+    margin-bottom: 0.3em;
+    font-size: 0.8em;
+}
+
+.wordcount-text {
+    color: #B1B1B1;
+    text-align: right;
+    margin-top: -1em;
+    margin-bottom: 1em;
+    font-size: 0.8em;
+}
+
+.medium-editor-toolbar li button:hover {
+    color: #00AFEC !important;
+}
+
+.medium-editor-placeholder:after {
+    left: 1em;
+    top: 1em;
+    font-family: Georgia, "Times New Roman", Times, serif !important;
+    font-size: 1em;
+}
+
+.write-error {
+    font-size: 0.8em !important;
+    margin-top: 0.1em !important;
+}

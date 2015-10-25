@@ -1,0 +1,102 @@
+<template name="Submissions">
+  <div class="ui container">
+    <div class="ui center aligned padded basic segment">
+      <h1 class="ui header">
+        <div class="content">Submissions: Page&nbsp;{{page}}
+          <h3 class="ui grey header">
+            {{fromDate}} &ndash; {{toDate}}
+          </h3>
+        </div>
+      </h1>
+      <div class="ui center aligned compact secondary blue menu">
+        <div class="header item">Sort by:</div>
+        {{#if newSort}}
+          <div class="newsort active item">New</div>
+          <a class="topsort item">Top</a>
+        {{else}}
+          <div class="newsort item">New</div>
+          <a class="topsort active item">Top</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="ui blue-background">
+    <div class="ui container">
+      <div class="ui padded basic segment">
+        <div class="ui cards">
+          {{#each submissions}}
+            {{> Submission}}
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="Submission">
+  <div class="ui link fluid card">
+    <div class="card-clickable content">
+      <div class="header">
+        {{summary}}
+      </div>
+      <div class="meta">
+        <span class="author">{{moniker}}</span>
+        <div class="right floated date" data-content="{{exactDate}}" data-variation="mini inverted">
+          {{simpleDate}}
+        </div>
+      </div>
+      <div class="card-clickable description">
+          {{snippet}}&hellip; <a class="read-more" href="#">&nbsp;{{wordcount}}&nbsp;words&nbsp;&rsaquo;&rsaquo;</a>
+      </div>
+    </div>
+    <div class="extra content vote-clickable {{#if voted}}active-votes{{else}}votes{{/if}}">
+      {{upvotes}} vote{{pluralVote}} <i class="caret up icon"></i>
+    </div>
+  </div>
+
+  <div id="submission-{{_id}}" class="ui small basic submission-modal modal">
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="header">
+          {{summary}}
+        </div>
+        <div class="meta">
+          <span class="author">{{moniker}}</span>
+          <div class="right floated date" data-content="{{exactDate}}" data-variation="mini inverted">
+            {{simpleDate}}
+          </div>
+        </div>
+        <div class="submission-formatted description">
+        </div>
+      </div>
+      <div class="extra content vote-clickable {{#if voted}}active-votes{{else}}votes{{/if}}">
+        {{upvotes}} vote{{pluralVote}} <i class="caret up icon"></i>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="AuthorPopup">
+  <div class="ui card">
+    <div class="content">
+      <div class="header">{{name}}</div>
+      <div class="meta">
+        <a>Member for {{joinTime}}</a>
+      </div>
+      <div class="description">
+        <p><a href="#">{{submissionCount}} submissions</a> on <a href="#">{{pageCount}} pages</a></p>
+
+        <p>{{approval}}% approval</p>
+      </div>
+    </div>
+    <div class="extra content">
+      <span class="right floated">
+        {{reads}} reads
+      </span>
+      <span>
+        <i class="comment icon"></i>
+        {{comments}} comments
+      </span>
+    </div>
+  </div>
+</template>
