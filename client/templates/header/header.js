@@ -1,9 +1,41 @@
 /*****************************************************************************/
 /* Header: Event Handlers */
 /*****************************************************************************/
+
+function showSignup() {
+  $('#create-modal').modal('show');
+}
+
+function showWrite() {
+  var user = Meteor.user();
+  if (user) {
+    if (_.has(user, 'profile') && _.has(user.profile, 'autosave') && user.profile.autosave.length > 0) {
+      $('.paper').html(user.profile.autosave);
+    }
+  }
+
+  updateWordcount();
+  Session.set('autosaveText', 'Autosaved.');
+  $('#write-modal').modal('show');
+  $('.paper').focus();
+}
+
 Template.Header.events({
   'click .sign-up': function() {
-    $('#create-modal').modal('show');
+    showSignup();
+  },
+  'click #write-header-item': function() {
+    $('#write-header-item').blur();
+    var user = Meteor.user();
+    if (!user) {
+      showSignup();
+    } else {
+      if (!(_.has(user, 'profile') && _.has(user.profile, 'moniker') && _.has(user.profile.moniker, 'moniker'))) {
+        $('#moniker-modal').modal('show');
+      } else {
+        showWrite();
+      }
+    }
   }
 });
 

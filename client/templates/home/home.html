@@ -1,4 +1,16 @@
 <template name="Home">
+  <div class="ui fluid center aligned container">
+    <div class="ui basic very padded segment home-banner">
+      <h1 class="ui inverted header">
+        The book has started!
+      </h1>
+      <h2 class="ui header">
+        <a href="{{pathFor route='submissions'}}">
+          Start reading and writing first page submissions&nbsp;&raquo;
+        </a>
+      </h2>
+    </div>
+  </div>
   <div class="ui fluid container gradient-background">
     <div class="ui basic very padded center aligned segment">
       <img class="ui centered medium image" src="images/collabowrite_text_inverted.svg" />
@@ -9,46 +21,6 @@
         Let’s write a book together.
       </p>
     </div>
-  </div>
-  <div class="ui text container">
-    <div id="email-jump" class="ui very padded basic center aligned segment">
-      <h2 class="ui header">COMING THIS NOVEMBER</h2>
-      <form class="ui form">
-        <div class="sixteen wide field">
-          <div class="ui left icon input">
-            <input name="subscribe-email" id="email-box" type="email" placeholder="Email">
-            <i class="mail icon"></i>
-          </div>
-          <button id="update-button" type="submit" class="ui large tertiary button">Stay Updated</button>
-          <div id="email-submit-dialog" class="ui icon hidden message">
-            <i class="close icon"></i>
-            <i class="inbox icon"></i>
-            <div class="content">
-              <div class="header">
-                Thanks, your email has been submitted!
-              </div>
-              <p>We&rsquo;ll send you updates when collabowrite is ready!</p>
-            </div>
-          </div>
-          <div id="email-submit-error" class="ui negative icon hidden message">
-            <i class="close icon"></i>
-            <div class="content">
-              The email address you entered is invalid, please try again.
-            </div>
-          </div>
-          <div id="email-duplicate-error" class="ui blue icon hidden message">
-            <i class="close icon"></i>
-            <div class="content">
-              You&rsquo;re already signed up for the mailing list.
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="ui horizontal divider">
-    <i class="big-icon ico-butterfly"></i>
   </div>
 
   <div class="ui basic center aligned segment">

@@ -165,23 +165,23 @@ Template.AccountModals.onRendered(function () {
   $('#create-modal').modal({
     onHide: function () {
       $('#create-modal .form').form('reset');
-      var forgotFields = $('#forgot-fields');
-      if (forgotFields.is(':visible')) {
-        forgotFields.css('display', 'none');
-      }
+      //var forgotFields = $('#forgot-fields');
+      //if (forgotFields.is(':visible')) {
+      //  forgotFields.css('display', 'none');
+      //}
       showErrors(null);
     }
   });
 
-  $('#forgot-password-modal').modal({
-    onHide: function () {
-      $('#forgot-password-modal .form').form('reset');
-      var resetPromt = $('#reset-no-email-prompt');
-      if (resetPromt.is(':visible')) {
-        resetPromt.transition('fade out');
-      }
-    }
-  });
+  //$('#forgot-password-modal').modal({
+  //  onHide: function () {
+  //    $('#forgot-password-modal .form').form('reset');
+  //    var resetPromt = $('#reset-no-email-prompt');
+  //    if (resetPromt.is(':visible')) {
+  //      resetPromt.transition('fade out');
+  //    }
+  //  }
+  //});
 
   Session.set('moniker-suggestions', null);
   Meteor.call('server/fakenames', function(error, result) {
@@ -233,12 +233,12 @@ Template.AccountModals.onRendered(function () {
     e.preventDefault();
   });
 
-  $('#forgot-password-modal .form').form({
-    fields: {
-      'email-reset': ['email']
-    },
-    inline: true
-  });
+  //$('#forgot-password-modal .form').form({
+  //  fields: {
+  //    'email-reset': ['email']
+  //  },
+  //  inline: true
+  //});
 
   $('#moniker-modal .form').form({
     fields: {
@@ -288,9 +288,9 @@ Template.AccountModals.onRendered(function () {
     });
   });
 
-  $('#forgot-password-modal .form').on('submit', function(e) {
-    e.preventDefault();
-  });
+  //$('#forgot-password-modal .form').on('submit', function(e) {
+  //  e.preventDefault();
+  //});
 
   $('#create-account').on('click', function() {
     if ($('#create-modal .form').form('is valid')) {
@@ -346,27 +346,27 @@ Template.AccountModals.onRendered(function () {
             $('#verify-modal').modal('show');
           } else {
             showErrors('#combo-error');
-            if (!$('#forgot-fields').is(':visible')) {
-              $('#forgot-fields').transition('fade up in');
-            }
+            //if (!$('#forgot-fields').is(':visible')) {
+            //  $('#forgot-fields').transition('fade up in');
+            //}
           }
         } else {
           $('#create-modal').modal('hide');
         }
       });
     } else {
-      showIfInvisible('#forgot-fields');
+      //showIfInvisible('#forgot-fields');
     }
   });
 
   $('.login-back').on('click', function() {
-    $('#forgot-password-modal .form').form('reset');
+    //$('#forgot-password-modal .form').form('reset');
     $('#create-modal').modal('show');
   });
 
-  $('#forgot-password-link').on('click', function() {
-    $('#forgot-password-modal').modal('show');
-  });
+  //$('#forgot-password-link').on('click', function() {
+  //  $('#forgot-password-modal').modal('show');
+  //});
 
   $('#moniker-field').on('input', function(e) {
     var field = $(e.target);

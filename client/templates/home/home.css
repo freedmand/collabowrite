@@ -138,6 +138,12 @@
     }
 }
 
+@media (max-width: 768px) {
+    .no-mobile {
+        display: none;
+    }
+}
+
 .night {
     background: #455969 !important;
 }
@@ -149,6 +155,22 @@
 
 .large-icon {
     font-size: 3em;
+}
+
+.home-banner {
+    background: #006AA7 !important;
+}
+
+.home-banner h1 {
+    margin-bottom: 0 !important;
+}
+
+.home-banner h2 {
+    margin-top: 0 !important;
+}
+
+.home-banner h2 a {
+    color: #B3E7FA !important;
 }
 
 p {

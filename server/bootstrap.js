@@ -8,6 +8,8 @@ Meteor.startup(function () {
   var mp = _.pairs(MALE_INITIALS);
   var fp = _.pairs(FEMALE_INITIALS);
 
+  Votes._ensureIndex({"userId": 1, "itemId": 1}, {unique: true});
+
   male_initial_generator = sampling(_.map(mp, function(k) { return k[1] / 100.0; }), _.map(mp, function(k) { return k[0].toUpperCase(); }));
   female_initial_generator = sampling(_.map(fp, function(k) { return k[1] / 100.0; }), _.map(fp, function(k) { return k[0].toUpperCase(); }))
 });

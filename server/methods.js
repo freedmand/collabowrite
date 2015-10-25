@@ -63,6 +63,89 @@ Meteor.methods({
       return e;
     }
   },
+  'server/submit': function(html, summary) {
+    var user = Meteor.user();
+    if (!user) {
+      throw new Meteor.Error('not-logged-in');
+    }
+
+    if (!(_.has(user, 'profile') && _.has(user.profile, 'moniker') && _.has(user.profile.moniker, 'moniker') && _.has(user.profile.moniker, 'monikerNorm'))) {
+      throw new Meteor.Error('no-moniker-created');
+    }
+
+    summary = summary.trim();
+    if (summary.length < 5 || summary.length > 30) {
+      throw new Meteor.Error('summary-length');
+    }
+
+    html = Meteor.call('shared/sanitize', html);
+    var text = Meteor.call('shared/htmlToText', html);
+    var wordcount = Meteor.call('shared/wordcount', text);
+    if (wordcount < 200 || wordcount > 500) {
+      throw new Meteor.Error('wordcount');
+    }
+
+    // good to submit
+    Submissions.insert({
+      body: html,
+      text: text,
+      summary: summary,
+      moniker: user.profile.moniker.moniker,
+      monikerNorm: user.profile.moniker.monikerNorm,
+      wordcount: wordcount,
+      upvotes: 0
+    });
+  },
+  'server/autosave': function(html) {
+    var id = Meteor.userId();
+    if (!id) {
+      throw new Meteor.Error('not-logged-in');
+    }
+
+    var output = Meteor.call('shared/sanitize', html);
+
+    Meteor.users.update(id, {$set:{"profile.autosave": output}});
+  },
+  'server/upvote_submission': function(submissionId) {
+    var id = Meteor.userId();
+    if (!id) {
+      throw new Meteor.Error('not-logged-in');
+    }
+
+    Votes.insert({
+      userId: id,
+      itemId: submissionId,
+      itemType: "submission",
+      vote: 1
+    });
+
+    Submissions.update(submissionId, {$inc: {'upvotes': 1}});
+
+    return true;
+  },
+  'server/remove_submission_upvote': function(submissionId) {
+    var id = Meteor.userId();
+    if (!id) {
+      throw new Meteor.Error('not-logged-in');
+    }
+
+    var v = Votes.findOne({
+      userId: id,
+      itemId: submissionId,
+      itemType: "submission",
+      vote: 1
+    });
+
+    if (!v) {
+      throw new Meteor.Error('cannot-double-unvote');
+    }
+
+    Votes.remove(v._id);
+
+    Submissions.update(submissionId, {$inc: {'upvotes': -1}});
+
+    return true;
+  },
   'server/send_email': function(to, subject, html, text) {
     // not connected to a Mandrill account; just log to console
     if (typeof process.env.MANDRILL_EMAIL === 'undefined' && !email_mocked) {

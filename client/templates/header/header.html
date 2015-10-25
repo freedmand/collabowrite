@@ -3,12 +3,10 @@
     <a href="{{pathFor route='home'}}" class="{{isActiveRoute 'home'}} toc item">
       <i class="ico-butterfly"></i>
     </a>
-    <a href="{{pathFor route='submissions'}}" class="{{isActiveRoute 'submissions'}} item">Submissions</a>
-    <a href="{{pathFor route='write'}}" class="{{isActiveRoute 'write'}} item">Write</a>
-    <a class="item">Read</a>
-    <a class="item">About</a>
+    <a href="{{pathFor route='submissions'}}" class="{{isActiveRoute 'submissions'}} item">Read</a>
+    <a id="write-header-item" href="#" class="item">Write</a>
 
-    <div class="right item">
+    <div class="right item" style="min-width: 9em;">
       {{#if currentUser }}
         {{> ProfileMenu}}
       {{else}}
@@ -16,16 +14,21 @@
       {{/if}}
     </div>
   </div>
+
+  {{> Write}}
 </template>
 
 <template name="ProfileMenu">
   <div id="username-dropdown" class="ui blue icon dropdown button">
-    <span class="text">{{username}}<i class="left dropdown icon"></i></span>
-    <div class="menu">
-      <a class="item">
-        <i class="spy icon"> Profile</i>
-      </a>
-      <a id='sign-out' class="item">
+    <span class="text">
+      <span class="no-mobile">{{username}}</span>
+      <i class="left dropdown icon"></i>
+    </span>
+    <div class="menu" style="min-width: 8em;">
+      <!--<a class="item">-->
+        <!--<i class="spy icon"> Profile</i>-->
+      <!--</a>-->
+      <a id='sign-out' class="item" style="min-width: 8em;">
         <i class="sign out icon"> Sign out</i>
       </a>
     </div>
