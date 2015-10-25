@@ -2,6 +2,52 @@
 /* AccountModals: Event Handlers */
 /*****************************************************************************/
 
+var monikerTimer = null;
+
+setMonikerField = function(elem) {
+  $('#moniker-field').val($(elem).text());
+};
+
+
+function checkMoniker(register) {
+  var monikerField = $('#moniker-field');
+  var moniker = monikerField.val();
+  var subprompt = $('#moniker-error-prompt h5');
+  Meteor.call('accounts/check_moniker', moniker, function(error, result) {
+    if (!error) {
+      if (!result.valid) {
+        subprompt.html('The secret name must contain between 3 and 30 characters, spaces excluded.');
+        showIfInvisible('#moniker-error-prompt');
+        return false;
+        // handle invalid moniker (must have 3 or more characters)
+      } else if (result.exists) {
+        subprompt.html('Sorry, this name is in use already.');
+        showIfInvisible('#moniker-error-prompt');
+        return false;
+      } else {
+        hideIfVisible('#moniker-error-prompt');
+        $('.spy.icon').addClass('green');
+        monikerField.addClass('valid-background');
+        if (register) {
+          Meteor.call('accounts/register_moniker', moniker, function(error, result) {
+            if (error || !result) {
+              subprompt.html('An unknown error occurred.');
+              showIfInvisible('#moniker-error-prompt');
+            } else {
+              $('#moniker-modal').modal('hide');
+              Router.go('submissions');
+            }
+          });
+        }
+      }
+    } else {
+      subprompt.html('An unknown error occurred.');
+      showIfInvisible('#moniker-error-prompt');
+      return false;
+    }
+  });
+}
+
 function closeAccordion() {
   $('.ui.accordion').accordion('close', 0);
 }
@@ -10,17 +56,11 @@ function openAccordion() {
   $('.ui.accordion').accordion('open', 0);
 }
 
-var errorClassifiers = [
-  '#unknown-error',
-  '#combo-error',
-  '#registered-error'
-];
-
 function hideIfVisible(classifier) {
   if ($(classifier).is(':visible')) {
     $(classifier).removeClass('visible');
     $(classifier).removeClass('transition');
-    $(classifier).fadeOut();
+    $(classifier).transition('fade out');
   }
 }
 
@@ -28,7 +68,7 @@ function showIfInvisible(classifier) {
   if (!$(classifier).is(':visible')) {
     $(classifier).removeClass('hidden');
     $(classifier).removeClass('transition');
-    $(classifier).fadeIn();
+    $(classifier).transition('fade in');
   }
 }
 
@@ -88,35 +128,82 @@ function showErrors(error) {
 /*****************************************************************************/
 Template.AccountModals.helpers({
   'email': function() {
-    return Session.get("email");
+    return Session.get('email');
   },
-  'monikers': [
-      'William Wordsmith',
-      'Mark Twainish',
-      'Corella DeGuire',
-      'J. K. Bowling',
-      'Nancy Pedigrew',
-      'Penumbron Cortez',
-      'Marcy McMackerell',
-      'Troy Raven',
-      'Courtney Joygood',
-      'Peniferous Kline',
-      'Ron Magenta',
-      'Coffee Grounds',
-      'Alejandro R. Martinez',
-      'Volkswagen Jones',
-      'P. J. Petersen',
-      'Travis McCloy'
-  ]
+  'monikers': function() {
+    return Session.get('moniker-suggestions');
+  }
+  //'monikers': [
+  //    'William Wordsmith',
+  //    'Mark Twainish',
+  //    'Corella DeGuire',
+  //    'J. K. Bowling',
+  //    'Nancy Pedigrew',
+  //    'Penumbron Cortez',
+  //    'Marcy McMackerell',
+  //    'Troy Raven',
+  //    'Courtney Joygood',
+  //    'Peniferous Kline',
+  //    'Ron Magenta',
+  //    'Coffee Grounds',
+  //    'Alejandro R. Martinez',
+  //    'Volkswagen Jones',
+  //    'P. J. Petersen',
+  //    'Travis McCloy'
+  //]
 });
 
 /*****************************************************************************/
 /* AccountModals: Lifecycle Hooks */
 /*****************************************************************************/
 Template.AccountModals.onCreated(function () {
+  Session.set('moniker-suggestions', null);
 });
 
 Template.AccountModals.onRendered(function () {
+
+  $('#create-modal').modal({
+    onHide: function () {
+      $('#create-modal .form').form('reset');
+      var forgotFields = $('#forgot-fields');
+      if (forgotFields.is(':visible')) {
+        forgotFields.css('display', 'none');
+      }
+      showErrors(null);
+    }
+  });
+
+  $('#forgot-password-modal').modal({
+    onHide: function () {
+      $('#forgot-password-modal .form').form('reset');
+      var resetPromt = $('#reset-no-email-prompt');
+      if (resetPromt.is(':visible')) {
+        resetPromt.transition('fade out');
+      }
+    }
+  });
+
+  Session.set('moniker-suggestions', null);
+  Meteor.call('server/fakenames', function(error, result) {
+    if (!error) {
+      Session.set('moniker-suggestions', result);
+      $('.suggestions-refresh').removeClass('no-display');
+      $('.suggestions-loader').addClass('no-display');
+    }
+  });
+
+  $('.suggestions-refresh').on('click', function() {
+    $('.suggestions-refresh').addClass('no-display');
+    $('.suggestions-loader').removeClass('no-display');
+    Meteor.call('server/fakenames', function(error, result) {
+      if (!error) {
+        Session.set('moniker-suggestions', result);
+        $('.suggestions-refresh').removeClass('no-display');
+        $('.suggestions-loader').addClass('no-display');
+      }
+    });
+  });
+
   $('.ui.accordion').accordion({
     selector: {
       trigger: '.icon.dropdown'
@@ -151,6 +238,17 @@ Template.AccountModals.onRendered(function () {
       'email-reset': ['email']
     },
     inline: true
+  });
+
+  $('#moniker-modal .form').form({
+    fields: {
+      moniker: ['minLength[3]', 'maxLength[30]']
+    },
+    inline: true
+  });
+
+  $('#moniker-modal .form').on('submit', function(e) {
+    e.preventDefault();
   });
 
   $('[name=email-reset]').on('focus', function() {
@@ -270,7 +368,22 @@ Template.AccountModals.onRendered(function () {
     $('#forgot-password-modal').modal('show');
   });
 
-  $('#moniker-field').on('input', function() {
+  $('#moniker-field').on('input', function(e) {
+    var field = $(e.target);
+    var text = field.val();
+    $('.spy.icon').removeClass('green');
+    field.removeClass('valid-background');
+
+    hideIfVisible('#moniker-error-prompt');
+
+    if (monikerTimer != null) {
+      clearTimeout(monikerTimer);
+    }
+
+    if (text.length >= 3 && text.length <= 30) {
+      monikerTimer = setTimeout(checkMoniker, 1000);
+    }
+
     if ($('#moniker-field').val().length == 0) {
       openAccordion();
     } else {
@@ -278,8 +391,8 @@ Template.AccountModals.onRendered(function () {
     }
   });
 
-  $('.moniker-button').on('click', function() {
-    closeAccordion();
+  $('#suggestions-moniker-text').on('click', function() {
+    $('.ui.accordion').accordion('toggle', 0);
   });
 
   $('#resend-button').on('click', function() {
@@ -292,6 +405,10 @@ Template.AccountModals.onRendered(function () {
       $('#resend-text').removeClass('switch');
       $('#resend-loader').removeClass('switch');
     });
+  });
+
+  $('#moniker-submit').on('click', function() {
+    checkMoniker(true);
   });
 
   $('[name=password]').on('focus', function() {
@@ -327,13 +444,6 @@ Template.AccountModals.onRendered(function () {
       percent: percent
     });
   });
-
-  $('#create-modal .close').on('click', function() {
-    $('.form').form('reset');
-  });
-
-  //$('#create-modal').modal('show');
-  //$('#reset-password-modal').modal('show');
 });
 
 Template.AccountModals.onDestroyed(function () {

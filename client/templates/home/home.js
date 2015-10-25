@@ -159,7 +159,7 @@ Template.Home.events({
   },
   "submit form": function(event) {
     event.preventDefault();
-    var email = $('[name=email]').val().trim();
+    var email = $('[name=subscribe-email]').val().trim();
     if (email.length != 0) {
       $('#update-button').addClass('loading');
       Meteor.call('server/insert_email', email, function(error, result) {
@@ -167,7 +167,7 @@ Template.Home.events({
         if (result === true) {
           Meteor.call('server/send_subscribe_email', email);
           show('#email-submit-dialog');
-          $('[name=email]').val('');
+          $('[name=subscribe-email]').val('');
         } else {
           if (result.stack.indexOf('duplicate key') != -1) {
             show('#email-duplicate-error');
@@ -196,7 +196,7 @@ Template.Home.onCreated(function () {
   $('.ui.form')
       .form({
         fields: {
-          email: {
+          'subscribe-email': {
             rules: [
               {
                 type: 'email',

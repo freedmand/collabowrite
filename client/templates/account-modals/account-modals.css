@@ -17,6 +17,14 @@
     margin-bottom: 4px !important;
 }
 
+#password-container {
+    margin-top: 0.5em !important;
+}
+
+#forgot-fields {
+    margin-top: 0.2em !important;
+}
+
 #password-progress {
     margin-top: -3px !important;
 }
@@ -45,6 +53,26 @@
 }
 
 .modal {
-    background-color: rgba(14, 16, 18, 0.86) !important;
+    background-color: rgb(231, 250, 255) !important;
     border-radius: 16px !important;
+}
+
+.suggestions-loader {
+    margin-left: 0.5em !important;
+}
+
+.no-display {
+    display: none !important;
+}
+
+.social-button {
+    margin-bottom: 0.5em !important;
+}
+
+.login-back:hover {
+    text-decoration: none;
+}
+
+.valid-background {
+    background: #D9FBD9 !important;
 }

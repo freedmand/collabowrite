@@ -1,15 +1,33 @@
 <template name="Header">
   <div class="ui inverted attached large secondary blue pointing menu">
-    <a class="toc item">
+    <a href="{{pathFor route='home'}}" class="{{isActiveRoute 'home'}} toc item">
       <i class="ico-butterfly"></i>
     </a>
-    <a class="active item">Submissions</a>
-    <a class="item">Write</a>
+    <a href="{{pathFor route='submissions'}}" class="{{isActiveRoute 'submissions'}} item">Submissions</a>
+    <a href="{{pathFor route='write'}}" class="{{isActiveRoute 'write'}} item">Write</a>
     <a class="item">Read</a>
     <a class="item">About</a>
 
     <div class="right item">
-      <a class="sign-up ui blue button">Sign up, or sign in</a>
+      {{#if currentUser }}
+        {{> ProfileMenu}}
+      {{else}}
+        <a class="sign-up ui blue button">Sign up, or sign in</a>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="ProfileMenu">
+  <div id="username-dropdown" class="ui blue icon dropdown button">
+    <span class="text">{{username}}<i class="left dropdown icon"></i></span>
+    <div class="menu">
+      <a class="item">
+        <i class="spy icon"> Profile</i>
+      </a>
+      <a id='sign-out' class="item">
+        <i class="sign out icon"> Sign out</i>
+      </a>
     </div>
   </div>
 </template>

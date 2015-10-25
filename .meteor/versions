@@ -25,6 +25,7 @@ ddp-rate-limiter@1.0.0
 ddp-server@1.2.1
 deps@1.0.9
 diff-sequence@1.0.1
+digilord:faker@1.0.7
 ecmascript@0.1.5
 ecmascript-collections@0.1.6
 ejson@1.0.7
@@ -54,6 +55,7 @@ less@2.5.0_3
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+mediumeditor:mediumeditor@5.2.0
 meteor@1.1.9
 meteor-base@1.0.1
 meteorhacks:async@1.0.0
@@ -102,6 +104,7 @@ srp@1.0.4
 standard-minifiers@1.0.1
 templating@1.1.4
 templating-tools@1.0.0
+timdown:rangy@1.2.3
 tracker@1.0.9
 u2622:persistent-session@0.4.3
 ui@1.0.8
@@ -117,3 +120,4 @@ velocity:source-map-support@0.3.2_1
 webapp@1.2.2
 webapp-hashing@1.0.5
 wylio:mandrill@1.0.1
+zimme:active-route@2.3.2

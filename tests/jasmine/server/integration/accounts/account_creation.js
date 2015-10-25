@@ -84,8 +84,8 @@ describe("Basic Account Creation", function() {
   it("Validates the verification correctly", function() {
     expect(verificationLookup.verified).toBeFalsy();
 
-    var result = Meteor.call('accounts/validate', email, verificationCode);
-    expect(result).toEqual({exists: true, verified: true});
+    var result = validateAccount(email, verificationCode);
+    expect(result).toBeTruthy();
 
     var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
     expect(users.length).toEqual(1);
@@ -101,8 +101,8 @@ describe("Basic Account Creation", function() {
     expect(verificationLookup.verified).toBeFalsy();
 
     verificationCode += '9'; // make code incorrect
-    var result = Meteor.call('accounts/validate', email, verificationCode);
-    expect(result).toEqual({exists: true, verified: false});
+    var result = validateAccount(email, verificationCode);
+    expect(result).toBeFalsy();
 
     var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
     expect(users.length).toEqual(1);
@@ -118,8 +118,8 @@ describe("Basic Account Creation", function() {
     beforeEach(function() {
       expect(verificationLookup.verified).toBeFalsy();
 
-      var result = Meteor.call('accounts/validate', email, verificationCode);
-      expect(result).toEqual({exists: true, verified: true});
+      var result = validateAccount(email, verificationCode);
+      expect(result).toBeTruthy();
 
       var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
       expect(users.length).toEqual(1);
@@ -207,6 +207,7 @@ describe("Moniker Creation", function() {
   var createUser = null;
   var verificationLookup = null;
   var verificationCode = null;
+  var user;
 
   beforeEach(function() {
     resetDatabase();
@@ -219,7 +220,7 @@ describe("Moniker Creation", function() {
 
     var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
     expect(users.length).toEqual(1);
-    var user = users[0];
+    user = users[0];
     verificationLookup = Verified.findOne({userId: user._id});
     expect(verificationLookup).not.toBeNull();
     verificationCode = verificationLookup.verification;
@@ -227,74 +228,94 @@ describe("Moniker Creation", function() {
 
   it("Allows creation of a moniker in a validated account", function() {
     var result = Meteor.call('accounts/check_moniker', moniker1);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
 
-    result = Meteor.call('accounts/validate', email, verificationCode);
-    expect(result).toEqual({exists: true, verified: true});
-    result = Meteor.call('accounts/register_moniker', email, moniker1);
+    result = validateAccount(email, verificationCode);
+    expect(result).toBeTruthy();
+
+    spyOn(Meteor, 'userId').and.returnValue(user._id);
+
+    result = Meteor.call('accounts/register_moniker', moniker1);
     expect(result).toBeTruthy();
     result = Meteor.call('accounts/check_moniker', moniker1);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
     result = Meteor.call('accounts/check_moniker', moniker1_alt1);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
     result = Meteor.call('accounts/check_moniker', moniker1_alt2);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
+  });
 
+  it("Denies creation of multiple monikers with one account", function() {
+    var result = Meteor.call('accounts/check_moniker', moniker1);
+    expect(result.exists).toBeFalsy();
+
+    result = validateAccount(email, verificationCode);
+    expect(result).toBeTruthy();
+
+    spyOn(Meteor, 'userId').and.returnValue(user._id);
+
+    result = Meteor.call('accounts/register_moniker', moniker1);
+    expect(result).toBeTruthy();
+    expect(function() {Meteor.call('accounts/register_moniker', moniker2)}).toThrow();
   });
 
   it("Denies creation of a moniker in an unvalidated account", function() {
     var result = Meteor.call('accounts/check_moniker', moniker1);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
 
-    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1)}).toThrow();
+    spyOn(Meteor, 'userId').and.returnValue(user._id);
+    expect(function() {Meteor.call('accounts/register_moniker', moniker1)}).toThrow();
 
     result = Meteor.call('accounts/check_moniker', moniker1);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
   });
 
   it("Denies creation of duplicate monikers", function() {
     var result = Meteor.call('accounts/check_moniker', moniker1);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
     result = Meteor.call('accounts/check_moniker', moniker1_alt1);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
     result = Meteor.call('accounts/check_moniker', moniker1_alt2);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
     result = Meteor.call('accounts/check_moniker', moniker2);
-    expect(_.isEqual(result, {exists: false})).toBeTruthy();
+    expect(result.exists).toBeFalsy();
 
     // create a new user
     Meteor.call('accounts/create_user', localEmail, password);
     var users = Meteor.users.find({emails: {$elemMatch: {address: localEmail}}}).fetch();
     expect(users.length).toEqual(1);
-    var user = users[0];
-    var newVerificationLookup = Verified.findOne({userId: user._id});
+    var newUser = users[0];
+    var newVerificationLookup = Verified.findOne({userId: newUser._id});
     expect(newVerificationLookup).not.toBeNull();
     var newVerificationCode = newVerificationLookup.verification;
 
     // validate both accounts
-    result = Meteor.call('accounts/validate', localEmail, newVerificationCode);
-    expect(result).toEqual({exists: true, verified: true});
-    result = Meteor.call('accounts/validate', email, verificationCode);
-    expect(result).toEqual({exists: true, verified: true});
-
-    result = Meteor.call('accounts/register_moniker', localEmail, moniker1);
+    result = validateAccount(localEmail, newVerificationCode);
     expect(result).toBeTruthy();
+    result = validateAccount(email, verificationCode);
+    expect(result).toBeTruthy();
+
+    spyOn(Meteor, 'userId').and.returnValue(newUser._id);
+    result = Meteor.call('accounts/register_moniker', moniker1);
+    expect(result).toBeTruthy();
+
     // expect duplicate moniker creation to fail
-    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1)}).toThrow();
-    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1_alt1)}).toThrow();
-    expect(function() {Meteor.call('accounts/register_moniker', email, moniker1_alt2)}).toThrow();
+    Meteor.userId = jasmine.createSpy().and.returnValue(user._id);
+    expect(function() {Meteor.call('accounts/register_moniker', moniker1)}).toThrow();
+    expect(function() {Meteor.call('accounts/register_moniker', moniker1_alt1)}).toThrow();
+    expect(function() {Meteor.call('accounts/register_moniker', moniker1_alt2)}).toThrow();
 
     // expect new moniker creation to work after fails
-    result = Meteor.call('accounts/register_moniker', email, moniker2);
+    result = Meteor.call('accounts/register_moniker', moniker2);
     expect(result).toBeTruthy();
 
     result = Meteor.call('accounts/check_moniker', moniker1);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
     result = Meteor.call('accounts/check_moniker', moniker1_alt1);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
     result = Meteor.call('accounts/check_moniker', moniker1_alt2);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
     result = Meteor.call('accounts/check_moniker', moniker2);
-    expect(_.isEqual(result, {exists: true})).toBeTruthy();
+    expect(result.exists).toBeTruthy();
   });
 });

@@ -1,42 +1,6 @@
 <template name="AccountModals">
-  <div id="reset-password-modal" class="ui small basic modal">
-    <i class="close icon"></i>
-    <div class="content">
-      <div class="ui center aligned container">
-        <i class="huge icons">
-          <i class="blue alternate unlock icon"></i>
-          <i class="corner inverted help circle icon"></i>
-        </i>
-        <h3 class="ui inverted header">Reset your password.</h3>
-        <div class="ui padded basic segment">
-          <div class="ui large form">
-            <div class="fields">
-              <div class="four wide field"></div>
-              <div class="eight wide field">
-                <div class="ui basic segment" id="bottom-clear-segment">
-                  <div class="ui inverted transparent large left icon disabled input">
-                    <input name="email-reset-static" type="email" placeholder="freedmand@gmail.com">
-                    <i class="mail icon"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="fields">
-              <div class="four wide field"></div>
-
-              <div class="eight wide field">
-                <div class="ui inverted large left icon input">
-                  <input name="password-reset" type="password" placeholder="Password">
-                  <i class="lock icon"></i>
-                </div>
-              </div></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div id="forgot-password-modal" class="ui small basic modal">
-    <i class="close icon"></i>
+    <i class="grey close icon"></i>
     <div class="header">
       <a class="login-back" href="#">
         <i class="left chevron icon"></i>
@@ -49,7 +13,7 @@
           <i class="blue lock icon"></i>
           <i class="corner inverted help circle icon"></i>
         </i>
-        <h3 class="ui inverted header">Reset your password.</h3>
+        <h3 class="ui black header">Reset your password.</h3>
         <div class="ui padded basic segment">
           <div class="ui large form">
             <div class="fields">
@@ -87,85 +51,81 @@
   </div>
 
   <div id="create-modal" class="ui small basic modal">
-    <i class="close icon"></i>
+    <i class="grey close icon"></i>
 
     <div class="content">
       <div class="ui center aligned container">
-        <i class="huge blue write square icon"></i>
-        <i class="huge blue comment icon"></i>
-        <i class="huge blue thumbs up icon"></i>
-        <h3 class="ui inverted header">Create an account to write pages, comment, and vote.</h3>
+        <i class="huge grey write square icon"></i>
+        <i class="huge grey comment icon"></i>
+        <i class="huge grey thumbs up icon"></i>
+        <h3 class="ui black header">Create an account to write pages, comment, and vote.</h3>
         <div class="ui padded basic segment">
-        <div class="ui large form">
-          <div class="fields">
-            <div class="eight wide field">
-              <div class="ui inverted large left icon input">
-                <input name="email" type="email" placeholder="Email address">
-                <i class="mail icon"></i>
+          <div class="ui large form">
+            <div class="fields">
+              <div class="four wide field"></div><div class="eight wide field">
+              <button class="ui fluid right icon facebook button social-button">
+                Connect with Facebook
+                <i class="facebook icon"></i>
+              </button>
+              <button class="ui fluid right icon google plus button">
+                Connect with Google
+                <i class="google icon"></i>
+              </button>
+            </div>
+            </div>
+            <div class="ui horizontal divider">OR CONNECT WITH EMAIL</div>
+            <div class="fields">
+              <div class="four wide field"></div>
+              <div class="eight wide field">
+                <div class="ui inverted large left icon input">
+                  <input name="email" type="email" placeholder="Email address">
+                  <i class="mail icon"></i>
+                </div>
+                <div id='password-container' class="ui inverted large left icon input">
+                  <input name="password" type="password" placeholder="Password">
+                  <i class="lock icon"></i>
+                </div>
+                <div id="password-progress" class="ui tiny bottom attached indicating progress active" style="display: none;">
+                  <div class="bar" style="transition-duration: 300ms; width: 100%;"></div>
+                </div>
+                <div id="forgot-fields" style="display: none;">
+                  <a id="forgot-password-link" href="#">Forgot password?</a>
+                </div>
               </div>
             </div>
-            <div class="eight wide field">
-              <div id='password-container' class="ui inverted large left icon input">
-                <input name="password" type="password" placeholder="Password">
-                <i class="lock icon"></i>
+            <div class="ui error message"></div>
+            <div class="fields">
+              <div class="two wide field"></div>
+              <div class="six wide field">
+                <div id="log-in" class="ui fluid large grey submit button">
+                  <i class="sign in icon"></i>
+                  Log in
+                </div>
               </div>
-              <div id="password-progress" class="ui tiny bottom attached indicating progress active" style="display: none;">
-                <div class="bar" style="transition-duration: 300ms; width: 100%;"></div>
+              <div class="six wide field">
+                <div id="create-account" class="ui fluid large primary submit button">
+                  <i class="add user icon"></i>
+                  Sign up
+                </div>
               </div>
+            </div>
+            <div class="error-messages" style="display: none;">
+              <div id="unknown-error" class="ui negative message">
+                <i class="close icon"></i>
+                An unknown error occurred. Please try again.
+              </div>
+              <div id="combo-error" class="ui negative message">
+                <i class="close icon"></i>
+                The email and password combination are incorrect. Please try again.
+              </div>
+              <div id="registered-error" class="ui info message">
+                <i class="close icon"></i>
+                That email address is already registered. Try logging in instead.
+              </div>
+            </div>
+            <div class="ui message error-message" style="display: none;">
             </div>
           </div>
-          <div class="fields" style="display: none;">
-            <div class="eight wide field">
-              <div class="ui small inverted progress" data-percent="0">
-                <div class="bar"></div>
-                <div class="label"></div>
-              </div>
-            </div>
-            <div class="eight wide field">
-              <div class="ui small inverted progress" data-percent="0">
-                <div class="bar"></div>
-                <div class="label"></div>
-              </div>
-            </div>
-          </div>
-          <div id="forgot-fields" class="fields" style="display: none;">
-            <div class="sixteen wide field">
-              <a id="forgot-password-link" href="#">Forgot password?</a>
-            </div>
-          </div>
-          <div class="ui error message"></div>
-          <div class="ui inverted divider"></div>
-          <div class="fields">
-            <div class="eight wide field">
-              <div id="log-in" class="ui fluid big inverted submit button">
-                <i class="sign in icon"></i>
-                Login
-              </div>
-            </div>
-            <div class="eight wide field">
-              <div id="create-account" class="ui fluid big primary submit button">
-                <i class="add user icon"></i>
-                Create Account
-              </div>
-            </div>
-          </div>
-          <div class="error-messages" style="display: none;">
-            <div id="unknown-error" class="ui negative message">
-              <i class="close icon"></i>
-              An unknown error occurred. Please try again.
-            </div>
-            <div id="combo-error" class="ui negative message">
-              <i class="close icon"></i>
-              The email and password combination are incorrect. Please try again.
-            </div>
-            <div id="registered-error" class="ui info message">
-              <i class="close icon"></i>
-              That email address is already registered. Try logging in instead.
-            </div>
-          </div>
-          <div class="ui message error-message" style="display: none;">
-          </div>
-        </div>
         </div>
 
       </div>
@@ -173,13 +133,13 @@
   </div>
 
   <div id="verify-modal" class="ui small basic modal">
-    <i class="close icon"></i>
+    <i class="grey close icon"></i>
 
     <div class="content">
       <div class="ui center aligned container">
         <i class="huge blue send icon"></i>
-        <h3 class="ui inverted header">We&rsquo;ve sent a verification email to {{email}}.</h3>
-        <h4 class="ui inverted header">
+        <h3 class="ui black header"></h3>
+        <h4 class="ui grey header">
           You should receive it soon. Click on the link in the email to finish creating your account.
         </h4>
         <div class="ui padded basic segment">
@@ -195,36 +155,48 @@
   </div>
 
   <div id="moniker-modal" class="ui small basic modal">
+    <i class="grey close icon"></i>
     <div class="ui center aligned container">
-      <i class="huge blue unhide icon"></i>
-      <h2 class="ui inverted header">Final step!</h2>
-      <h3 class="ui inverted header">Choose a secret author name so no one will know your true identity.<div class="sub header">This name will show up next to all your submissions and comments.</div></h3>
-      <div class="ui padded basic segment">
-        <div class="ui large form">
-          <div class="fields">
-            <div class="sixteen wide field">
-              <div class="ui inverted large left icon input">
-                <input id="moniker-field" type="text" placeholder="Secret identity">
-                <i class="spy icon"></i>
+      <div class="ui very padded basic segment">
+        <h2 class="ui blue header">Final step!</h2>
+        <h3 class="ui black header">
+          Choose a secret author name so no one will know your true identity.
+          <div class="sub header">
+            This name will show up next to all your submissions and comments.
+          </div>
+        </h3>
+        <div class="ui basic segment">
+          <div class="ui large form">
+            <div class="fields">
+              <div class="sixteen wide field">
+                <div class="ui inverted large left icon input">
+                  <input id="moniker-field" name="moniker" type="text" placeholder="Secret identity">
+                  <i class="spy icon"></i>
+                </div>
+                <div id="moniker-error-prompt" class="ui basic negative message label" style="display: none;">
+                  <h5></h5>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="ui inverted accordion field">
-            <div class="title active">
-              <i class="icon dropdown"></i>
-              Suggestions
-              <i class="hidden refresh icon"></i>
+            <div class="ui accordion field">
+              <div class="title active">
+                <i class="icon dropdown"></i>
+                <span id="suggestions-moniker-text">Suggestions</span>
+                <div class="ui mini active inline loader suggestions-loader"></div>
+                <i class="no-display suggestions-refresh refresh icon"></i>
+              </div>
+              <div class="content active">
+                {{#each monikers}}
+                  <button onclick="setMonikerField(this)" class="ui moniker-button small grey slightly-padded button">{{this}}</button>
+                {{/each}}
+              </div>
+              <div class="ui divider"></div>
+              <button id="moniker-submit" class="ui fluid primary large right labeled icon submit button">
+                All done, let&rsquo;s go!
+                <i class="check icon"></i>
+              </button>
             </div>
-            <div class="content active">
-              {{#each monikers}}
-                <button class="ui moniker-button inverted slightly-padded button">{{this}}</button>
-              {{/each}}
-            </div>
           </div>
-          <button class="ui fluid primary large right labeled icon button">
-            All done, let&rsquo;s go!
-            <i class="check icon"></i>
-          </button>
         </div>
       </div>
     </div>

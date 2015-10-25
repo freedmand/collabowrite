@@ -1,4 +1,51 @@
 
+Accounts.registerLoginHandler(function(loginRequest) {
+  if (!loginRequest.emailVerifyMethod) {
+    return undefined;
+  }
+
+  var email = loginRequest.email;
+  var verification = loginRequest.verification;
+
+  var userId = validateAccount(email, verification);
+  if (!userId) {
+    return null;
+  }
+
+  var stampedToken = Accounts._generateStampedLoginToken();
+  var hashStampedToken = Accounts._hashStampedToken(stampedToken);
+
+  Meteor.users.update(userId, {$push: {'services.resume.loginTokens': hashStampedToken}});
+
+  return {
+    userId: userId,
+    token: stampedToken.token
+  };
+});
+
+validateAccount = function(email, verification) {
+  var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
+  if (users.length == 0) {
+    // return {exists: false, verified: false};
+    return false;
+  }
+  var user = users[0];
+
+  var verificationLookup = Verified.findOne({userId: user._id});
+  if (verificationLookup == null) {
+    return false;
+    // throw new Meteor.Error('unknown', 'Verification record not set');
+  }
+
+  var verified = verificationLookup.verification == verification;
+  if (verified) {
+    Verified.update(verificationLookup._id, {$set: {verified: true}});
+    return user._id;
+  } else {
+    return false;
+  }
+};
+
 Accounts.validateLoginAttempt(function(data) {
   if (data.allowed) {
     var email = data.user.emails[0].address;
@@ -77,34 +124,47 @@ Meteor.methods({
     Meteor.call('server/send_verification_email', email, Router.url('verify'), verification);
     return true;
   },
-  'accounts/validate': function(email, verification) {
-    var user = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
-    if (user.length == 0) {
-      return {exists: false, verified: false};
-    }
-
-    var verificationLookup = Verified.findOne({userId: user[0]._id});
-    if (verificationLookup == null) {
-      throw new Meteor.Error('unknown', 'Verification record not set');
-    } else {
-      if (verificationLookup.verifiedType != "account") {
-        throw new Meteor.Error('already-verified', 'Improper verification type');
-      }
-      if (verificationLookup.verified) {
-        return {exists: true, verified: true};
-      }
-    }
-
-    var verified = verificationLookup.verification == verification;
-    if (verified) {
-      Verified.update(verificationLookup._id, {$set: {verified: true}});
-    }
-
-    return {
-      exists: true,
-      verified: verified
-    };
-  },
+  //'accounts/validate': function(email, verification) {
+  //  var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
+  //  if (users.length == 0) {
+  //    return {exists: false, verified: false};
+  //  }
+  //  var user = users[0];
+  //
+  //  var verificationLookup = Verified.findOne({userId: user._id});
+  //  if (verificationLookup == null) {
+  //    throw new Meteor.Error('unknown', 'Verification record not set');
+  //  } else {
+  //    if (verificationLookup.verifiedType != "account") {
+  //      throw new Meteor.Error('already-verified', 'Improper verification type');
+  //    }
+  //    if (verificationLookup.verified) {
+  //      return {exists: true, verified: true};
+  //    }
+  //  }
+  //
+  //  var verified = verificationLookup.verification == verification;
+  //  if (verified) {
+  //    Verified.update(verificationLookup._id, {$set: {verified: true}});
+  //  }
+  //
+  //  // log the user in with some trickery
+  //  if (!plain_email_mocked) {
+  //    Email.send = function() {};
+  //    plain_email_mocked = true;
+  //  }
+  //
+  //  Accounts.sendVerificationEmail(user._id);
+  //
+  //  var tokens = Meteor.users.findOne(user._id).services.email.verificationTokens;
+  //  var token = tokens[tokens.length - 1].token;
+  //
+  //  return {
+  //    exists: true,
+  //    verified: verified,
+  //    token: token
+  //  };
+  //},
   'accounts/validate_password_reset': function(email, verification) {
     var user = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
     if (user.length == 0) {
@@ -148,22 +208,39 @@ Meteor.methods({
   },
   'accounts/check_moniker': function(moniker) {
     var normed = Meteor.call('server/normalize_moniker', moniker);
+    if (normed.length < 3 || normed.length > 30) {
+      return {valid: false};
+    }
+
     var users = Meteor.users.find({'profile.moniker.monikerNorm': normed}).fetch();
     if (users.length == 0) {
-      return {exists: false};
+      return {
+        valid: true,
+        exists: false
+      };
     } else {
       return {
+        valid: true,
         exists: true
       };
     }
   },
-  'accounts/register_moniker': function(email, moniker) {
-    var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
+  'accounts/register_moniker': function(moniker) {
+    var id = Meteor.userId();
+    if (!id) {
+      throw new Meteor.Error("not-logged-in");
+    }
+
+    var users = Meteor.users.find(id).fetch();
     if (users.length == 0) {
       throw new Meteor.Error("usernotfound");
     }
 
     var user = users[0];
+    if (_.has(user, 'profile') && _.has(user.profile, 'moniker') && _.has(user.profile.moniker, 'monikerNorm')) {
+      throw new Meteor.Error('user-has-moniker', 'You have already set your moniker.')
+    }
+
     var verificationLookup = Verified.findOne({userId: user._id});
     if (verificationLookup == null) {
       throw new Meteor.Error('unknown', 'Verification record not set');
