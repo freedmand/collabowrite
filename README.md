@@ -1,6 +1,8 @@
 # Introducing Collabowrite
 Collabowrite is a collaborative writing website to crowdsource book creation. Let's write a book together.
 
+*UPDATE:* The experiment has gone live. Users can now post and vote on pages.
+
 Live site: [collabowrite.io](http://www.collabowrite.io/)
 
 ## How it works
@@ -9,7 +11,7 @@ We will write a book together, one page a day.
 * Anyone can vote on a page
 * Each day, the highest voted page for that day is added to the book
 
-Using this method, we will write a 30 page book November 2015, one page for each day in November.
+Using this method, we will write a 30 page book in November 2015, one page for each day in November.
 
 Since the book will be so influenced by how the first page turns out, we have an exception to these rules: the first page. We will open the submission system for the first page on October 25, 2015 and leave it open through the end of November 1st.
 
@@ -44,20 +46,21 @@ The organization should be fairly intuitive. I used [iron-cli](https://github.co
 # Project status
 
 ### What's been implemented
-* An attractive landing page
-* An overly complex login system (not reachable from the first page yet)
-* Testing for the login system
-* Too much vector artwork
+* A landing page
+* A log-in system
+* A user submission system with an autosaving Medium-style text editor
+* Ability to sort posts by "New" and "Top"
+* Ability to vote on posts
+* Graphics and overall site design
+* Integration tests for most critical site functionality
 
 ### What needs to be implemented
-* The voting system
-* The final touches to account creation
-* **The submission system:** I am envisioning a Reddit-esque style where each post for a day pops up and is sortable by "fresh", "new", and "top". Pages can be upvoted. I am contemplating doing away with downvoting since it encourages negativity, instead offering an option to flag content (ads, non-fiction, etc.).
-* **The page submission system:** Where a user can write and submit a page. A user can enter a brief title summary of the page, the body text, and optionally sign off as anonymous. Writing controls should be minimal. I think the writing tools should either only support bold, italic, and underline, or nothing initially.
-* **The page submission view:** Pages that have been written and are still under contention can be expanded and viewed on a standalone page. Here there should be functionality for comments and proofreading suggestions.
-* **The book view:** After the first page has been submitted, it needs to appear in a more finalized, book-ready form (i.e. if the page submission view is sans-serif, the book view is serif with a slightly faded yellow book color background). The book view allows one to read the book page by page up to its latest submission. For each page, a user should be able to comment and see alternate submissions.
-* **A proofreading or editing system:** the fine mechanics of this are still being worked out. It will either be a way to comment with just a proofreading comment (i.e. replace certain characters with these characters). These comments can be upvoted/downvoted to crowdsource editing. The book and page view could have a toggle to view prominent proofreading suggestions.
-* Testing for everything
+* The final touches to account creation with social integration (Facebook and Google log-ins)
+* Password reset functionality
+* Additional features on posted content: commenting, sort by "Fresh" (like Reddit's "Best" sorting method), author profile pages (view submissions by author, as well as see stats on overall favor), be able to "flag" content
+* **The book view:** After the first page has been submitted, it needs to appear in a more finalized, book-ready form. The book view allows one to read the book page by page up to its latest submission. For each page, a user should be able to comment and see alternate submissions.
+* **A proofreading or editing system:** the fine mechanics of this are still being worked out. It will either be a way to comment with just a proofreading comment (i.e. replace certain characters with these characters). These comments can be upvoted/downvoted to crowdsource editing. The book and page view could have a toggle to view prominent proofreading suggestions overlayed on the text.
+* More comprehensive integration tests and client-side tests
 
 ### Future goals
 * Allow users to create their own books, specify the rules and genres, timeline of how many pages and how long each page iteration will take (or how many pages must be submitted on a given iteration).
