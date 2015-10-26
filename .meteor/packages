@@ -23,7 +23,6 @@ accounts-password
 meteorhacks:npm
 
 
-npm-container
 ejson
 semantic:ui
 flemay:less-autoprefixer
@@ -45,3 +44,4 @@ digilord:faker
 timdown:rangy
 mediumeditor:mediumeditor
 momentjs:moment
+npm-container

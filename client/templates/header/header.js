@@ -8,16 +8,17 @@ function showSignup() {
 
 function showWrite() {
   var user = Meteor.user();
+  var paper = $('.paper');
   if (user) {
     if (_.has(user, 'profile') && _.has(user.profile, 'autosave') && user.profile.autosave.length > 0) {
-      $('.paper').html(user.profile.autosave);
+      paper.html(user.profile.autosave);
     }
   }
 
   updateWordcount();
   Session.set('autosaveText', 'Autosaved.');
   $('#write-modal').modal('show');
-  $('.paper').focus();
+  paper.focus();
 }
 
 Template.Header.events({

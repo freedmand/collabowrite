@@ -4,6 +4,8 @@
 
 REGISTRATION_MONIKERS_N = 7;
 
+html2txt = Meteor.npmRequire('html2plaintext');
+
 function compileTemplate(baseFn, css) {
   var htmlFn = 'templates/' + baseFn + '/' + baseFn + '.html';
   var cssFn = typeof css !== 'undefined' ? 'templates/' + baseFn + '/' + baseFn + '.css' : null;
@@ -33,7 +35,7 @@ function fakename() {
       return initial_generator.next() + '. ' + faker.name.lastName(gender);
     }
   }
-};
+}
 
 function removeExisting(normalizedMonikers) {
   return _.difference(normalizedMonikers, Meteor.users.find({"profile.moniker.monikerNorm": {$in: normalizedMonikers}},{fields: {"profile.moniker.monikerNorm":1}}).fetch().map(function(d) {return d.profile.moniker.monikerNorm;}));
@@ -79,7 +81,7 @@ Meteor.methods({
     }
 
     html = Meteor.call('shared/sanitize', html);
-    var text = Meteor.call('shared/htmlToText', html);
+    var text = Meteor.call('server/htmlToText', html);
     var wordcount = Meteor.call('shared/wordcount', text);
     if (wordcount < 200 || wordcount > 500) {
       throw new Meteor.Error('wordcount');
@@ -220,5 +222,8 @@ Meteor.methods({
     }
 
     return _.map(result, function(d) {return normTable[d];});
+  },
+  'server/htmlToText': function(html) {
+    return html2txt(html).replace(/[\n\s]+/g, ' ').trim();
   }
 });

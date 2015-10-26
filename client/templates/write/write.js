@@ -5,15 +5,14 @@ var editorTimer = null;
 var AUTOSAVED = 'Autosaved.';
 var UNTRACKED = 'Untracked changes.';
 var SAVING = 'Saving changes…';
-var ERROR = 'An unexpected error occurred.'
+var ERROR = 'An unexpected error occurred.';
 
 function autoSave() {
   Session.set('autosaveText', SAVING);
   var output = $(editor.elements).html();
-  Meteor.call('shared/sanitize', output, function(error, result) {
+  Meteor.call('shared/sanitize', output, function(error) {
     if (!error) {
-      $(editor.elements).html(result);
-      Meteor.call('server/autosave', output, function(error, result) {
+      Meteor.call('server/autosave', output, function(error) {
         if (!error) {
           Session.set('autosaveText', AUTOSAVED);
         } else {
@@ -74,10 +73,10 @@ Template.Write.onCreated(function () {
 });
 
 Template.Write.onRendered(function () {
-  $('#write-submit').on('click', function(error, result) {
+  $('#write-submit').on('click', function(error) {
     var body = $('.paper').html();
     var summary = $('[name=summary]').val();
-    Meteor.call('server/submit', body, summary, function (error, result) {
+    Meteor.call('server/submit', body, summary, function (error) {
       if (error) {
         var errorElem = $('.write-error');
         if (error.error == 'summary-length') {
@@ -105,7 +104,7 @@ Template.Write.onRendered(function () {
       align: 'left'
     }
   });
-  editor.subscribe('editableInput', function (event, editable) {
+  editor.subscribe('editableInput', function () {
     hideError();
     updateWordcount();
     Session.set('autosaveText', UNTRACKED);
