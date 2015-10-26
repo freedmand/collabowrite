@@ -21,7 +21,7 @@
 //});
 
 Meteor.publish('submissionsNew', function() {
-  return Submissions.find({}, {sort: {createdAt: 1}});
+  return Submissions.find({}, {sort: {createdAt: -1}});
 });
 
 Meteor.publish('submissionsTop', function() {

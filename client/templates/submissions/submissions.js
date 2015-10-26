@@ -16,7 +16,7 @@ Template.Submissions.events({
 Template.Submissions.helpers({
   'submissions': function() {
     if (Session.get('newSort')) {
-      return Submissions.find({}, {sort: {createdAt: 1}});
+      return Submissions.find({}, {sort: {createdAt: -1}});
     } else {
       return Submissions.find({}, {sort: {upvotes: -1}});
     }
@@ -58,7 +58,7 @@ function vote(id) {
 }
 
 Template.Submission.events({
-  'click .card-clickable ': function(event, template) {
+  'click .card-clickable ': function() {
     var data = Template.instance().data;
     var id = data._id;
     var modal = $('#submission-' + id);
@@ -72,7 +72,7 @@ Template.Submission.events({
       }
     });
   },
-  'click .vote-clickable': function(e) {
+  'click .vote-clickable': function() {
     var id = Template.instance().data._id;
     if (!Meteor.userId()) {
       $('#create-modal').modal('show');
