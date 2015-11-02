@@ -42,6 +42,11 @@ Meteor.publish('submissionsYesterdayWinner', function(pg) {
   return Submissions.find({page: pg - 1}, {sort: {upvotes: -1}, limit: 1});
 });
 
+Meteor.publish('submissionsYesterdayWinnerLatest', function() {
+  var pg = Meteor.call('server/getpage').page;
+  return Submissions.find({page: pg - 1}, {sort: {upvotes: -1}, limit: 1});
+});
+
 Meteor.publish('votes', function() {
   return Votes.find({
     userId: this.userId,
