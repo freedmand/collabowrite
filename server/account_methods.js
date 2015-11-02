@@ -23,7 +23,28 @@ Accounts.registerLoginHandler(function(loginRequest) {
   };
 });
 
+sanitizeValidation = function(code) {
+  if (!code && code != "") {
+    throw new Meteor.Error("improper validation format");
+  }
+  var result = "";
+  var validCharacters = "0123456789abcdef";
+  for (var i = 0; i < code.length; i++) {
+    var c = code.charCodeAt(i);
+    if (c >= 97 && c <= 102) {
+      result += code[i];
+    } else if (c >= 65 && c <= 70) {
+      result += String.fromCharCode(c + 32);
+    } else if (c >= 48 && c <= 57) {
+      result += code[i];
+    }
+  }
+
+  return result;
+};
+
 validateAccount = function(email, verification) {
+  verification = sanitizeValidation(verification);
   var users = Meteor.users.find({emails: {$elemMatch: {address: email}}}).fetch();
   if (users.length == 0) {
     // return {exists: false, verified: false};

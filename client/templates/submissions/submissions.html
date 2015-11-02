@@ -2,9 +2,18 @@
   <div class="ui container">
     <div class="ui center aligned padded basic segment">
       <h1 class="ui header">
-        <div class="content">Submissions: Page&nbsp;{{page}}
-          <h3 class="ui grey header">
-            {{fromDate}} &ndash; {{toDate}}
+        <div class="content">Submissions:&nbsp;
+          <div id="page-dropdown" class="ui inline dropdown">
+            <div class="text">Page {{page}}</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              {{#each dropdownItems}}
+                <a {{dropdownAttr}}>Page {{dropdownPage}}</a>
+              {{/each}}
+            </div>
+          </div>
+          <h3 class="ui grey date-range header">
+            {{dateRange}}
           </h3>
         </div>
       </h1>
@@ -20,6 +29,9 @@
       </div>
     </div>
   </div>
+  {{#with featuredSubmission}}
+    {{> FeaturedSubmission}}
+  {{/with}}
   <div class="ui blue-background">
     <div class="ui container">
       <div class="ui padded basic segment">
@@ -55,6 +67,57 @@
   </div>
 
   <div id="submission-{{_id}}" class="ui small basic submission-modal modal">
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="header">
+          {{summary}}
+        </div>
+        <div class="meta">
+          <span class="author">{{moniker}}</span>
+          <div class="right floated date" data-content="{{exactDate}}" data-variation="mini inverted">
+            {{simpleDate}}
+          </div>
+        </div>
+        <div class="submission-formatted description">
+        </div>
+      </div>
+      <div class="extra content vote-clickable {{#if voted}}active-votes{{else}}votes{{/if}}">
+        {{upvotes}} vote{{pluralVote}} <i class="caret up icon"></i>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="FeaturedSubmission">
+  <div class="ui container">
+    <div class="ui basic padded segment">
+      <div class="ui link fluid featured-card card">
+        <div class="ui top attached card-clickable grey button">
+          <i class="trophy icon"></i>
+          {{featuredText}}
+        </div>
+        <div class="card-clickable content">
+          <div class="header">
+            {{summary}}
+          </div>
+          <div class="meta">
+            <span class="author">{{moniker}}</span>
+            <div class="right floated date" data-content="{{exactDate}}" data-variation="mini inverted">
+              {{simpleDate}}
+            </div>
+          </div>
+          <div class="card-clickable description">
+              {{snippet}}&hellip; <a class="read-more" href="#">&nbsp;{{wordcount}}&nbsp;words&nbsp;&rsaquo;&rsaquo;</a>
+          </div>
+        </div>
+        <div class="extra content vote-clickable {{#if voted}}active-votes{{else}}votes{{/if}}">
+          {{upvotes}} vote{{pluralVote}} <i class="caret up icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="submission-featured-{{_id}}" class="ui small basic submission-modal modal">
     <div class="ui fluid card">
       <div class="content">
         <div class="header">

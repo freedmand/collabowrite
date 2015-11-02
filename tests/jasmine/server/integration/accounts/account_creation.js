@@ -55,6 +55,16 @@ describe("Basic Account Creation", function() {
     expect(Meteor.call).toHaveBeenCalledWith('accounts/generate_verification_code');
   });
 
+  it("Sanitizes validation", function() {
+    expect(sanitizeValidation("`abcdefg/0123456789:")).toEqual("abcdef0123456789");
+    expect(sanitizeValidation("`ABCDEFG/0123456789:")).toEqual("abcdef0123456789");
+    expect(sanitizeValidation("0aAbbcC0123")).toEqual("0aabbcc0123");
+    expect(sanitizeValidation("")).toEqual("");
+    expect(sanitizeValidation("x")).toEqual("");
+    expect(sanitizeValidation("8f6ad4")).toEqual("8f6ad4");
+    expect(sanitizeValidation("8f6ad4\"")).toEqual("8f6ad4");
+  });
+
   it("Sends a validation email", function() {
     expect(Meteor.call).toHaveBeenCalledWith('server/send_verification_email', email, jasmine.any(String), jasmine.any(String));
   });

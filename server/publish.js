@@ -20,21 +20,29 @@
 //  return this.ready();
 //});
 
-Meteor.publish('submissionsNew', function() {
-  return Submissions.find({}, {sort: {createdAt: -1}});
+Meteor.publish('submissionsNew', function(pg) {
+  return Submissions.find({page: pg}, {sort: {createdAt: -1}});
 });
 
-Meteor.publish('submissionsTop', function() {
-  return Submissions.find({}, {sort: {upvotes: -1}});
+Meteor.publish('submissionsTop', function(pg) {
+  return Submissions.find({page: pg}, {sort: {upvotes: -1}});
+});
+
+Meteor.publish('submissionsCurrentNew', function() {
+  var pg = Meteor.call('server/getpage').page;
+  return Submissions.find({page: pg}, {sort: {createdAt: -1}});
+});
+
+Meteor.publish('submissionsCurrentTop', function() {
+  var pg = Meteor.call('server/getpage').page;
+  return Submissions.find({page: pg}, {sort: {upvotes: -1}});
+});
+
+Meteor.publish('submissionsYesterdayWinner', function(pg) {
+  return Submissions.find({page: pg - 1}, {sort: {upvotes: -1}, limit: 1});
 });
 
 Meteor.publish('votes', function() {
-  //var userId = this.userId;
-  //if (!userId) {
-  //  //throw new Meteor.Error('must-be-logged-in');
-  //  return null;
-  //}
-
   return Votes.find({
     userId: this.userId,
     itemType: 'submission',
