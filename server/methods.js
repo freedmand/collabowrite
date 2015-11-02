@@ -4,8 +4,6 @@
 
 REGISTRATION_MONIKERS_N = 7;
 
-html2txt = Meteor.npmRequire('html2plaintext');
-
 function compileTemplate(baseFn, css) {
   var htmlFn = 'templates/' + baseFn + '/' + baseFn + '.html';
   var cssFn = typeof css !== 'undefined' ? 'templates/' + baseFn + '/' + baseFn + '.css' : null;
@@ -114,6 +112,12 @@ Meteor.methods({
       throw new Meteor.Error('not-logged-in');
     }
 
+    var submission = Submissions.findOne(submissionId);
+    var page = Meteor.call('server/getpage').page;
+    if (submission.page != page) {
+      throw new Meteor.Error('cannot-vote-on-old-submission');
+    }
+
     Votes.insert({
       userId: id,
       itemId: submissionId,
@@ -129,6 +133,12 @@ Meteor.methods({
     var id = Meteor.userId();
     if (!id) {
       throw new Meteor.Error('not-logged-in');
+    }
+
+    var submission = Submissions.findOne(submissionId);
+    var page = Meteor.call('server/getpage').page;
+    if (submission.page != page) {
+      throw new Meteor.Error('cannot-vote-on-old-submission');
     }
 
     var v = Votes.findOne({
@@ -199,10 +209,10 @@ Meteor.methods({
     }
   },
   'server/send_verification_email': function(email, link, verification) {
-    Meteor.call('server/send_email', email, 'Verify your Collabowrite Account', SSR.render('EmailVerification', {email: email, link: link, verification: verification}));
+    Meteor.call('server/send_email', encodeURIComponent(email), 'Verify your Collabowrite Account', SSR.render('EmailVerification', {link: link + '?' + 'email' +  encodeURIComponent(email) + '&v=' + verification}));
   },
   'server/send_password_reset_email': function(email, link, verification) {
-    Meteor.call('server/send_email', email, 'Collabowrite Password Reset', SSR.render('PasswordReset', {email: email, link: link, verification: verification}));
+    Meteor.call('server/send_email', encodeURIComponent(email), 'Collabowrite Password Reset', SSR.render('PasswordReset', {email: email, link: link, verification: verification}));
   },
   'server/send_subscribe_email': function(to) {
     Meteor.call('server/send_email', to, 'Thanks for subscribing', SSR.render('EmailList'));
@@ -225,5 +235,20 @@ Meteor.methods({
   },
   'server/htmlToText': function(html) {
     return html2txt(html).replace(/[\n\s]+/g, ' ').trim();
+  },
+  // returns the current page and time remaining
+  'server/getpage': function() {
+    var day = new Date();
+
+    for (var i = 0; i < calendar.length; i++) {
+      if (day >= calendar[i].from && day < calendar[i].to) {
+        return {
+          page: calendar[i].day,
+          remaining: calendar[i].to - day
+        };
+      }
+    }
+
+    return null;
   }
 });
